@@ -1,6 +1,6 @@
 import os
 import os.path
-from statistics import mean, median
+from statistics import mean, median, stdev, variance
 import sys
 
 import Bio
@@ -38,6 +38,14 @@ if __name__ == "__main__":
                 pLDDT = set(a.bfactor for a in res.child_list)
                 assert len(pLDDT) == 1
                 all_plDDT.append(pLDDT.pop())
-            print(",".join((pdb, str(int(mean(all_plDDT))), str(int(median(all_plDDT))))))
+            print(",".join((
+                pdb,
+                str(int(mean(all_plDDT))),
+                str(int(median(all_plDDT))),
+                str(int(stdev(all_plDDT))),
+                str(int(variance(all_plDDT))),
+                str(int(max(all_plDDT))),
+                str(int(min(all_plDDT)))
+            )))
         except Exception as e:
             print(pdb, file=sys.stderr)
