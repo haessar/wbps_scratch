@@ -1,11 +1,12 @@
 #! /usr/bin/env python3
 from bs4 import BeautifulSoup
+import os
 import os.path
 import requests
 import shutil
 
 base_url = "https://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/current/species/"
-
+output_dir = "data/from_WBP/"
 
 def download_file(url, datadir):
     local_filename = url.split('/')[-1]
@@ -36,4 +37,6 @@ if __name__ == "__main__":
                         a3 = r3.find('a')
                         if a3:
                             if a3.text.endswith("genomic.fa.gz") or a3.text.endswith("annotations.gff3.gz"):
-                                download_file(base_url + species + acc + a3.text, datadir="data/from_WBP")
+                                if a3.text not in os.listdir(output_dir):
+                                    print(a3.text)
+                                    download_file(base_url + species + acc + a3.text, datadir=output_dir)
