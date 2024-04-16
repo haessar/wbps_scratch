@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import os
 import os.path
 from statistics import mean, median, stdev, variance
