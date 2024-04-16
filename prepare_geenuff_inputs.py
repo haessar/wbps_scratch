@@ -11,7 +11,7 @@ import sys
 if __name__ == "__main__":
     input_dir = sys.argv[1]
     output_dir = sys.argv[2]
-    pattern = r"^(?P<species>[a-z\_]+)\.(?P<acc>[^\.]+)\.(?P<rel>[^\.]+)\..*"
+    pattern = r"^(?P<species>[a-z0-9\_]+)\.(?P<acc>[^\.]+)\.(?P<rel>[^\.]+)\..*"
     filetree = defaultdict(set)
 
     for file in os.listdir(input_dir):
