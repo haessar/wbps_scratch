@@ -9,3 +9,6 @@ scp (large) datasets from `MARS:/users/whh2g/sharedscratch/parse_pdb/` and place
 
 ### `./get_all_species.py output_dir`
 Download all gzipped gff3 and genomic fasta files for all species from the current WBP release, and store in **output_dir**.
+
+### `./prepare_geenuff_inputs.py input_dir output_dir`
+Create necessary directory structure to be compatable with the import2geenuff.py script from GeenuFF. **input_dir** should contain the raw gzipped gff3 and genomic fasta files as gathered by `get_all_species.py`.
