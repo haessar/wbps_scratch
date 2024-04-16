@@ -16,8 +16,11 @@ if __name__ == "__main__":
 
     for file in os.listdir(input_dir):
         match = re.match(pattern, file)
-        if match.group("species"):
-            filetree[match["species"]].add(match["acc"])
+        try:
+            if match.group("species"):
+                filetree[match["species"]].add(match["acc"])
+        except AttributeError:
+            print("{} does not match input file pattern".format(file), file=sys.stderr)
 
     for species, accs in filetree.items():
         for acc in accs:
