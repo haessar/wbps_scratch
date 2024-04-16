@@ -7,5 +7,5 @@ Scratch scripts for performing analysis related to WormBase ParaSite data.
 ### `pdb_analysis.ipynb`
 scp (large) datasets from `MARS:/users/whh2g/sharedscratch/parse_pdb/` and place in `data/from_MARS/`. Uses `matplotlib` to produce plots in output dir `plots/`.
 
-### `./get_all_species.py`
-Download all gzipped gff3 and genomic fasta files for all species from the current WBP release, and store in `data/from_WBP/`.
+### `./get_all_species.py output_dir`
+Download all gzipped gff3 and genomic fasta files for all species from the current WBP release, and store in **output_dir**.

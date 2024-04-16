@@ -4,9 +4,10 @@ import os
 import os.path
 import requests
 import shutil
+import sys
 
 base_url = "https://ftp.ebi.ac.uk/pub/databases/wormbase/parasite/releases/current/species/"
-output_dir = "data/from_WBP/"
+
 
 def download_file(url, datadir):
     local_filename = url.split('/')[-1]
@@ -25,6 +26,7 @@ def soup_resp(url):
 
 
 if __name__ == "__main__":
+    output_dir = sys.argv[1]
     for r1 in soup_resp(base_url).find("table").find_all("tr"):
         a1 = r1.find('a')
         if a1 and "_" in a1.text:
