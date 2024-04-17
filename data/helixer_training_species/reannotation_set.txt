@@ -1,0 +1,5 @@
+heterorhabditis_bacteriophora_prjna13977
+teladorsagia_circumcincta_prjna72569
+ancylostoma_ceylanicum_prjna72583
+globodera_pallida_prjna702104
+angiostrongylus_cantonensis_prjna350391
