@@ -12,3 +12,6 @@ Download all gzipped gff3 and genomic fasta files for all species from the curre
 
 ### `./prepare_geenuff_inputs.py input_dir output_dir`
 Create necessary directory structure to be compatable with the import2geenuff.py script from GeenuFF. **input_dir** should contain the raw gzipped gff3 and genomic fasta files as gathered by `get_all_species.py`.
+
+### `determine_training_species.ipynb`
+Uses TSV of BUSCO scores for annotation and assembly of all WBP species to select candidates for reannotation, model training and validation in Helixer. Outputs text lists of candidate species to `data/helixer_training_species/`.
