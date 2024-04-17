@@ -15,3 +15,6 @@ Create necessary directory structure to be compatable with the import2geenuff.py
 
 ### `determine_training_species.ipynb`
 Uses TSV of BUSCO scores for annotation and assembly of all WBP species to select candidates for reannotation, model training and validation in Helixer. Outputs text lists of candidate species to `data/helixer_training_species/`.
+
+### `./prepare_helixer_training_inputs.py train_set_file valid_set_file base_dir`
+TODO
