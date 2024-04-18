@@ -24,8 +24,12 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
             if len(src_paths) == 0:
                 raise Exception("Couldn't determine src path for {}".format(species))
             elif len(src_paths) > 1:
-                acc = extract_accession(species)
-                src_paths = [f for f in glob if "_".join((sp, acc)) in f]
+                src_matching_accession_paths = []
+                for fp in src_paths:
+                    acc = extract_accession(os.path.basename(os.path.dirname(fp)))
+                    if acc == extract_accession(species):
+                        src_matching_accession_paths.append(fp)
+                src_paths = src_matching_accession_paths
                 assert len(src_paths) == 1
             src_path = src_paths[0]
             os.symlink(
