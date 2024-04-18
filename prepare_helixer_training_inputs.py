@@ -18,23 +18,25 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
         species_list = f.read().splitlines()
     
     for idx, species in enumerate(species_list, start=start):
-        sp = extract_species(species)
-        src_paths = glob(os.path.join(h5s_dir, "{}*".format(sp), "*.h5"))
-        if len(src_paths) == 0:
-            print("Couldn't determine src path for {}".format(species), file=sys.stderr)
-            continue
-        elif len(src_paths) > 1:
-            acc = extract_accession(species)
-            src_paths = [f for f in glob if "_".join((sp, acc)) in f]
-            assert len(src_paths) == 1
-        src_path = src_paths[0]
-        os.symlink(
-            os.path.relpath(
-                src_path,
-                train_dir
-            ),
-            os.path.join(train_dir, "{}_data.species_{:02d}.h5".format(type, idx))
-        )
+        try:
+            sp = extract_species(species)
+            src_paths = glob(os.path.join(h5s_dir, "{}*".format(sp), "*.h5"))
+            if len(src_paths) == 0:
+                raise Exception("Couldn't determine src path for {}".format(species))
+            elif len(src_paths) > 1:
+                acc = extract_accession(species)
+                src_paths = [f for f in glob if "_".join((sp, acc)) in f]
+                assert len(src_paths) == 1
+            src_path = src_paths[0]
+            os.symlink(
+                os.path.relpath(
+                    src_path,
+                    train_dir
+                ),
+                os.path.join(train_dir, "{}_data.species_{:02d}.h5".format(type, idx))
+            )
+        except Exception as e:
+            print("{}: {}".format(species, e), file=sys.stderr)
     return idx
 
 
