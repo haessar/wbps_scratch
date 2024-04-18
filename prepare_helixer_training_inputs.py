@@ -39,6 +39,8 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
                 ),
                 os.path.join(train_dir, "{}_data.species_{:02d}.h5".format(type, idx))
             )
+        except FileExistsError:
+            pass
         except Exception as e:
             print("{}: {}".format(species, e), file=sys.stderr)
     return idx
