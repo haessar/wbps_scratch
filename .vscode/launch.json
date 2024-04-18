@@ -5,12 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: prepare_helixer_training_inputs.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "prepare_helixer_training_inputs.py",
+            "console": "integratedTerminal",
+            "args": [
+                "data/helixer_training_species/training_set.txt",
+                "data/helixer_training_species/validation_set.txt",
+                "data/helixer_training_inputs_test/"
+            ]
+        },
+        {
             "name": "Python Debugger: parse_pdb.py",
             "type": "debugpy",
             "request": "launch",
             "program": "parse_pdb.py",
             "console": "integratedTerminal",
-            "args": ["test_pdb"],
+            "args": [
+                "test_pdb"
+            ],
         },
     ]
 }

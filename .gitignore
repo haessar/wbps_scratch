@@ -1,2 +1,3 @@
 *.csv
 *.gz
+data/helixer_training_inputs_test/train/*
