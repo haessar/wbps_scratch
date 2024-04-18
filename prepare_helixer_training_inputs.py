@@ -21,7 +21,7 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
         sp = extract_species(species)
         src_paths = glob(os.path.join(h5s_dir, "{}*".format(sp), "*.h5"))
         if len(src_paths) == 0:
-            raise Exception("Couldn't determine src path for {}".format(species))
+            print("Couldn't determine src path for {}".format(species), file=sys.stderr)
         elif len(src_paths) > 1:
             acc = extract_accession(species)
             src_paths = [f for f in glob if "_".join((sp, acc)) in f]
