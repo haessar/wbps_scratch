@@ -26,5 +26,5 @@ Prepare symbolic links in **train_dir** with the following hierarchy, using **tr
 └── validation_data.species_04.h5 -> ../h5s/speciesD/test_data.h5
 ```
 
-### `get_gene_map.py gffcmp_refmap`
+### `./get_gene_map.py gffcmp_refmap`
 Extract gene IDs from given GFFCompare .refmap file **gffcmp_refmap** using a regex pattern. Prints TSV-formatted lines to console of `ref_gene_id  target_gene_id`.
