@@ -49,10 +49,9 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
 if __name__ == "__main__":
     train_set_file = sys.argv[1]
     valid_set_file = sys.argv[2]
-    base_dir = sys.argv[3]
+    train_dir = sys.argv[3]
 
-    h5s_dir = os.path.join(base_dir, "h5s")
-    train_dir = os.path.join(base_dir, "train")
+    h5s_dir = os.path.join(os.path.dirname(train_dir), "h5s")
 
     os.makedirs(train_dir, exist_ok=True)
 

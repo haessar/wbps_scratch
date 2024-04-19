@@ -13,7 +13,7 @@
             "args": [
                 "data/helixer_training_species/training_set.txt",
                 "data/helixer_training_species/validation_set.txt",
-                "data/helixer_training_inputs_test/"
+                "data/helixer_training_inputs_test/train"
             ]
         },
         {
