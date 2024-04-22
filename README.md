@@ -28,3 +28,6 @@ Prepare symbolic links in **train_dir** with the following hierarchy, using **tr
 
 ### `./get_gene_map.py gffcmp_refmap`
 Extract gene IDs from given GFFCompare .refmap file **gffcmp_refmap** using a regex pattern. Prints TSV-formatted lines to console of `ref_gene_id  target_gene_id`.
+
+### `./busco_preprocessing.sh seqfile annfile`
+Sort annotation GFF3 **anfile** and translate CDS to protein sequences using genome fasta **seqfile**. These can then be used for running BUSCO in "proteins" mode.
