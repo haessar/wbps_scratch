@@ -12,4 +12,5 @@ if __name__ == "__main__":
     if response.status == 200:
         reader = codecs.getreader("utf-8")
         obj = json.load(reader(response))
+        print(">" + obj[0]["gene"])
         print(obj[0]["uniprotSequence"])
