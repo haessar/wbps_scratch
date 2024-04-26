@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import codecs
 import json
 import sys
