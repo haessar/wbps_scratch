@@ -31,3 +31,6 @@ Extract gene IDs from given GFFCompare .refmap file **gffcmp_refmap** using a re
 
 ### `./busco_preprocessing.sh seqfile annfile`
 Sort annotation GFF3 **annfile** and translate CDS to protein sequences using genome fasta **seqfile**. These can then be used for running BUSCO in "proteins" mode.
+
+### `./get_prot_seq_for_uniprot_acc.py uniprot_acc`
+Call the EBI AlphaFold API to get the protein sequence for a given **uniprot_acc**.
