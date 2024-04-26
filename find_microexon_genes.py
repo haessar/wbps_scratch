@@ -2,23 +2,20 @@ import os.path
 
 import gffutils
 
-helixer_gff3 = "data/from_MARS/Schistosoma_mansoni_helixer_full.gff3"
-helixer_db_path = "Sm_helixer_full.db"
-wbps_gff3 = "/home/will/tests/Schistosoma/mansoni/schistosoma_mansoni.PRJEA36577.WBPS19.annotations.gff3"
-wbps_db_path = "Sm_wbps.db"
+helixer = ("data/from_MARS/Schistosoma_mansoni_helixer_full.gff3", "Sm_helixer_full.db")
+wbps = ("data/from_WBP/schistosoma_mansoni.PRJEA36577.WBPS19.annotations.gff3", "Sm_wbps.db")
+braker3 = ("data/from_MARS/Schistosoma_mansoni_braker3.gff3", "Sm_braker3.db")
 
-gff_path = helixer_gff3
-db_path = helixer_db_path
-
+INPUTS = braker3
 MAX_LENGTH = 36
 REQ_CONSECUTIVE = 2
 
 if __name__ == "__main__":
-    if not os.path.exists(db_path):
-        db = gffutils.create_db(gff_path, db_path, merge_strategy="create_unique")
+    if not os.path.exists(INPUTS[1]):
+        db = gffutils.create_db(INPUTS[0], INPUTS[1], merge_strategy="create_unique")
 
     else:
-        db = gffutils.FeatureDB(db_path)
+        db = gffutils.FeatureDB(INPUTS[1])
     
     ME_gene_count = 0
     for gene in db.all_features(featuretype="gene"):
