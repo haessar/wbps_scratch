@@ -34,3 +34,6 @@ Sort annotation GFF3 **annfile** and translate CDS to protein sequences using ge
 
 ### `./get_prot_seq_for_uniprot_acc.py uniprot_acc`
 Call the EBI AlphaFold API to get the protein sequence for a given **uniprot_acc**.
+
+### `./find_microexon_genes.py`
+Prints to console genes that comply with criteria defined within script, followed by the total number.
