@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import os.path
 import sys
 
@@ -11,11 +12,13 @@ INPUTS = helixer
 MAX_LENGTH = 36
 REQ_CONSECUTIVE = 2
 
+
 def is_microexon(exon_length):
     if 0 < exon_length <= MAX_LENGTH:
         if exon_length % 3 == 0:
             return True
     return False
+
 
 def format_microexon_length(exon_length):
     if is_microexon(exon_length):
@@ -27,16 +30,14 @@ if __name__ == "__main__":
     output_dir = sys.argv[1] if len(sys.argv) > 1 else None
     if not os.path.exists(INPUTS[1]):
         db = gffutils.create_db(INPUTS[0], INPUTS[1], merge_strategy="create_unique")
-
     else:
         db = gffutils.FeatureDB(INPUTS[1])
     
-    ME_gene_count = 0
-
     if output_dir:
         output_path = os.path.join(output_dir, os.path.splitext(INPUTS[1])[0] + ".md")
         f = open(output_path, "w")
 
+    ME_gene_count = 0
     for gene in db.all_features(featuretype="gene"):
         is_ME_gene = False
         exons = list(db.children(gene.id, featuretype="exon"))
