@@ -26,5 +26,15 @@
                 "test_pdb"
             ],
         },
+        {
+            "name": "Python Debugger: find_microexon_genes.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "find_microexon_genes.py",
+            "console": "integratedTerminal",
+            "args": [
+                "data/microexon_genes/"
+            ],
+        },
     ]
 }
