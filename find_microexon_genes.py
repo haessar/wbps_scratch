@@ -19,7 +19,7 @@ def is_microexon(exon_length):
 
 def format_microexon_length(exon_length):
     if is_microexon(exon_length):
-        return "<u>" + str(exon_length) + "</u>"
+        return "<ins>" + str(exon_length) + "</ins>"
     return str(exon_length)
 
 
