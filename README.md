@@ -37,3 +37,6 @@ Call the EBI AlphaFold API to get the protein sequence for a given **uniprot_acc
 
 ### `./find_microexon_genes.py output_dir`
 Prints to console genes that comply with criteria defined within script, followed by the total number. If (optional) **output_dir** is specified, write MD-formatted exon-lengths for each microexon gene.
+
+### `./run_omark.sh input db`
+Run `omamer search` and `omark` for a given protein FASTA file **input** and OMAmer H5 file **db**. Ensure these commands are available in PATH, either through virtualenv or otherwise.
