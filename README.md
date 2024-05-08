@@ -43,3 +43,6 @@ Run `omamer search` and `omark` for a given protein FASTA file **input** and OMA
 
 ### `compare_gene_maps.ipynb`
 Analyse the gene maps between Strongyloides stercoralis WBPS18 and WBPS19 releases, produced from my own running of Liftoff (see `get_gene_map.py`) and also the official WBPS mapping pipeline.
+
+### `./filter_Ac_ctg_for_Artemis.sh ctg_num`
+Filter FASTA and GFF files for given **ctg_num** of Ancylostoma ceylanicum and launch Artemis with these as inputs. The hard-coded files need to be available in the directory from which the script is run.
