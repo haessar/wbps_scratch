@@ -1,5 +1,3 @@
-*.csv
-*.gz
 *.db
 
 data/helixer_training_inputs_test/train/training_data.species_16.h5
