@@ -40,3 +40,6 @@ Prints to console genes that comply with criteria defined within script, followe
 
 ### `./run_omark.sh input db`
 Run `omamer search` and `omark` for a given protein FASTA file **input** and OMAmer H5 file **db**. Ensure these commands are available in PATH, either through virtualenv or otherwise.
+
+### `compare_gene_maps.ipynb`
+Analyse the gene maps between Strongyloides stercoralis WBPS18 and WBPS19 releases, produced from my own running of Liftoff (see `get_gene_map.py`) and also the official WBPS mapping pipeline.
