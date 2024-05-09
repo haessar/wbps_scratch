@@ -4,3 +4,4 @@ data/helixer_training_inputs_test/train/training_data.species_16.h5
 data/helixer_training_inputs_test/train/validation_data.species_91.h5
 data/from_WBPS/strongyloides_stercoralis.PRJNA930454.WBPS19.annotations.gff3
 data/from_WBPS/schistosoma_mansoni.PRJEA36577.WBPS19.annotations.gff3
+data/from_WBPS/strongyloides_stercoralis.PRJEB528.WBPS18.annotations.gff3
