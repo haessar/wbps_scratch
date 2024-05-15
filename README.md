@@ -49,3 +49,6 @@ Filter FASTA and GFF files for given **ctg_num** of Ancylostoma ceylanicum and l
 
 ### `./find_schistosome_orthogroups.py`
 For a OrthoFinder orthogroup (HOG) output table, iterate through all orthogroups which contain at least one orthologous transcript from each of a selection of species, write .bed files of CDS boundaries for each species' transcript, and use pyGenomeTracks to plot the tracks.
+
+### `schistosome_orthologue_analysis.ipynb`
+Analyse interesting cases of orthogroup exons based on given statistical metrics. Uses the outputs from `find_schistosome_orthogroups.py`.
