@@ -5,6 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: find_schistosome_orthogroups.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "find_schistosome_orthogroups.py",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
             "name": "Python Debugger: prepare_helixer_training_inputs.py",
             "type": "debugpy",
             "request": "launch",

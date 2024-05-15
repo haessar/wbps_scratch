@@ -46,3 +46,6 @@ Analyse the gene maps between Strongyloides stercoralis WBPS18 and WBPS19 releas
 
 ### `./filter_Ac_ctg_for_Artemis.sh ctg_num`
 Filter FASTA and GFF files for given **ctg_num** of Ancylostoma ceylanicum and launch Artemis with these as inputs. The hard-coded files need to be available in the directory from which the script is run.
+
+### `./find_schistosome_orthogroups.py`
+For a OrthoFinder orthogroup (HOG) output table, iterate through all orthogroups which contain at least one orthologous transcript from each of a selection of species, write .bed files of CDS boundaries for each species' transcript, and use pyGenomeTracks to plot the tracks.
