@@ -1,6 +1,7 @@
 from collections import defaultdict
 import configparser
 import csv
+import json
 import os.path
 import statistics
 
@@ -21,7 +22,7 @@ df = pd.read_csv(hog_path, delimiter="\t")
 df = df.iloc[df.isnull().sum(1).sort_values(ascending=True).index]
 
 DO_PLOT = True
-OVERWRITE = True
+OVERWRITE = False
 CHROM_LABEL = "X"
 WBPS_RELEASE = "WBPS19"
 
@@ -126,6 +127,7 @@ true_orths = set()
 one_exon_diff_orths = set()
 multi_exon_diff_orths = set()
 prot_lengths = defaultdict(list)
+exon_counts = defaultdict(list)
 
 for idx, row in tqdm(df.iterrows(), total=len(df.dropna())):
     if any(row.isna()):
@@ -148,7 +150,8 @@ for idx, row in tqdm(df.iterrows(), total=len(df.dropna())):
         clade_exons[sp.clade].append(len(exons))
         # prot_lengths[row['HOG']].append(len(sp.get_protein_sequence(transcript.id.split("transcript:")[1])))
         prot_lengths[row['HOG']].append(sp.get_amino_acid_count(exons))
-    uniq_exon_nums = flatten_list_to_set(clade_exons.values())
+        exon_counts[row['HOG']].append(len(exons))
+    uniq_exon_nums = flatten_list_to_set(clade_exons.values()) 
     if len(uniq_exon_nums) == 1:
         true_orths.add(row['HOG'])
     else:
@@ -168,3 +171,9 @@ for idx, row in tqdm(df.iterrows(), total=len(df.dropna())):
         fig = trp.plot(plot_path, CHROM_LABEL, 0, max_end)
         fig.clear()
         plt.close(fig)
+
+with open("data/schistosome_orthogroups/prot_lengths.json", "w") as f:
+    json.dump(prot_lengths, f)
+
+with open("data/schistosome_orthogroups/exon_counts.json", "w") as f:
+    json.dump(exon_counts, f)
