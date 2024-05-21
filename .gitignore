@@ -11,3 +11,4 @@ data/from_WBPS/strongyloides_stercoralis.PRJNA930454.WBPS19.annotations.gff3
 data/from_WBPS/strongyloides_stercoralis.PRJEB528.WBPS18.annotations.gff3
 data/from_WBPS/schistosoma_*.annotations.gff3
 data/from_WBPS/schistosoma_*.protein.fa*
+data/schistosome_orthogroups/*.tsv

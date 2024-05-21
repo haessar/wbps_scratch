@@ -47,8 +47,8 @@ Analyse the gene maps between Strongyloides stercoralis WBPS18 and WBPS19 releas
 ### `./filter_Ac_ctg_for_Artemis.sh ctg_num`
 Filter FASTA and GFF files for given **ctg_num** of Ancylostoma ceylanicum and launch Artemis with these as inputs. The hard-coded files need to be available in the directory from which the script is run.
 
-### `./find_schistosome_orthogroups.py`
-For a OrthoFinder orthogroup (HOG) output table, iterate through all orthogroups which contain at least one orthologous transcript from each of a selection of species, write .bed files of CDS boundaries for each species' transcript, and use pyGenomeTracks to plot the tracks.
+### `./analyse_schistosome_orthogroups.py [OPTIONS]`
+For a OrthoFinder orthogroup (HOG) output table, iterate through all orthogroups which contain at least one orthologous transcript from each of a selection of species, write .bed files of CDS boundaries for each species' transcript, and use pyGenomeTracks to plot the tracks. Plotting now only carried out with **--do-plot** option, while **--overwrite** will overwrite a plot even when it exists. There is an additional TSV output file generated on each run in `data/schistosome_orthogroups/` which contains analysis for each HOG. Several of the TSV columns will only be filled when the option **--load-blast** is supplied (as they rely on BLAST outputs from the OrthoFinder working directory). In addition, supplying **--clade** integer will filter these BLAST-specific data to only the relevant species clade.
 
 ### `schistosome_orthologue_analysis.ipynb`
-Analyse interesting cases of orthogroup exons based on given statistical metrics. Uses the outputs from `find_schistosome_orthogroups.py`.
+Analyse interesting cases of orthogroup exons based on given statistical metrics. Uses the outputs from `analyse_schistosome_orthogroups.py`.
