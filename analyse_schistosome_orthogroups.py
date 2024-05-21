@@ -282,14 +282,19 @@ if __name__ == "__main__":
     load_blast = args.load_blast
     clade = args.clade
 
-    table_path = f'data/schistosome_orthogroups/table_{str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))}_{hog}_{clade}.tsv'
+    table_path = f"""data/schistosome_orthogroups/table_{
+        "_".join(filter(None, (
+            datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
+            str(hog) if hog else None,
+            "clade" + str(clade) if clade else None
+    )))}.tsv"""
     if hog:
         df = df[df["HOG"] == hog]
     for _, row in tqdm(df.iterrows(), total=len(df.dropna())):
         if any(row.isna()):
             break
         with OrthoGroup(row=row, do_plot=do_plot or bool(hog), load_blast=load_blast, table_path=table_path) as og:
-            if os.path.exists(og.conf_path) and os.path.exists(og.plot_path) and not overwrite:
+            if do_plot and os.path.exists(og.conf_path) and os.path.exists(og.plot_path) and not overwrite:
                 continue
             og.parse_exons()
             if do_plot or bool(hog):
