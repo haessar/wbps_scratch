@@ -6,7 +6,6 @@ import configparser
 import csv
 from datetime import datetime
 import os.path
-import statistics
 
 from matplotlib import pyplot as plt
 import pandas as pd
@@ -15,7 +14,7 @@ from pygenometracks.tracks.BedTrack import DEFAULT_BED_COLOR
 import pysam
 from tqdm import tqdm
 
-from utils.generic import flatten_list_to_list, flatten_list_to_set
+from utils.generic import flatten_list_to_list
 from utils.gffutils import init_db
 
 of_out_dir = "data/from_MARS/OrthoFinder/Results_May10/"
@@ -283,11 +282,6 @@ if __name__ == "__main__":
     load_blast = args.load_blast
     clade = args.clade
 
-    true_orths = set()
-    one_exon_diff_orths = set()
-    multi_exon_diff_orths = set()
-    prot_lengths = defaultdict(list)
-    exon_counts = defaultdict(list)
     table_path = f'data/schistosome_orthogroups/table_{str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S"))}_{hog}_{clade}.tsv'
     if hog:
         df = df[df["HOG"] == hog]
@@ -302,16 +296,3 @@ if __name__ == "__main__":
                 og.plot_tracks()
             if load_blast:
                 og.find_transcripts_with_lowest_pident(clade)
-            uniq_exon_nums = flatten_list_to_set(og.clade_exons.values()) 
-            if len(uniq_exon_nums) == 1:
-                true_orths.add(row["HOG"])
-            else:
-                # med_num_exons = statistics.median(flatten_list_to_list(og.clade_exons.values()))
-                max_diff = max(uniq_exon_nums) - min(uniq_exon_nums)
-                if max_diff == 1:
-                    one_exon_diff_orths.add(row["HOG"])
-                elif max_diff > 1:
-                    multi_exon_diff_orths.add(row["HOG"])
-                # for clade, exon_nums in og.clade_exons.items():
-                #     if len(set(exon_nums)) > 1:
-                #         print()
