@@ -17,7 +17,7 @@ from tqdm import tqdm
 from utils.generic import flatten_list_to_list
 from utils.gffutils import init_db
 
-of_out_dir = "data/from_MARS/OrthoFinder/Results_May10/"
+of_out_dir = "data/from_MARS/OrthoFinder/Results_May21/"
 hog_path = os.path.join(of_out_dir, "Phylogenetic_Hierarchical_Orthogroups", "N0.tsv")
 wd_path = os.path.join(of_out_dir, "WorkingDirectory")
 
@@ -164,6 +164,14 @@ class JaponicumClade(Schistosoma):
     clade = 3
 
 
+class IndicumClade(Schistosoma):
+    clade = 4
+
+
+class NewSpeciesClade(Schistosoma):
+    clade = 5
+
+
 class SpeciesList(UserList):
     def get_species_ids_for_clade(self, clade):
         species_ids = set()
@@ -179,10 +187,15 @@ SPECIES_LIST = SpeciesList([
     HaematobiumClade("guineensis", "PRJEB44434"),
     HaematobiumClade("haematobium", "TD2_PRJEB44434"),
     HaematobiumClade("intercalatum", "TD2_PRJEB44434"),
+    HaematobiumClade("margrebowiei", "PRJEB44434"),
+    HaematobiumClade("mattheei", "PRJEB44434"),
     MansoniClade("rodhaini", "TD2_PRJEB44434"),
     MansoniClade("mansoni", "PRJEA36577"),
     JaponicumClade("japonicum", "PRJNA520774"),
+    IndicumClade("spindale", "PRJEB44434"),
+    NewSpeciesClade("turkestanicum", "PRJEB44434")
 ])
+
 
 class OrthoGroup:
     def __init__(self, row, do_plot, load_blast, table_path):
@@ -208,6 +221,8 @@ class OrthoGroup:
             if self.load_blast:
                 sp.load_blastout()
             prot_ids = self.row[sp.prots_label]
+            if type(prot_ids) == float:
+                continue
             transcript, exons = sp.select_transcript(prot_ids)
             self.selected_transcripts[sp] = transcript.id.split(":")[1]
             self.max_end = max(self.max_end, transcript.end - transcript.start)
@@ -291,7 +306,7 @@ if __name__ == "__main__":
     if hog:
         df = df[df["HOG"] == hog]
     for _, row in tqdm(df.iterrows(), total=len(df.dropna())):
-        if any(row.isna()):
+        if any(row.isna()) and not bool(hog):
             break
         with OrthoGroup(row=row, do_plot=do_plot or bool(hog), load_blast=load_blast, table_path=table_path) as og:
             if do_plot and os.path.exists(og.conf_path) and os.path.exists(og.plot_path) and not overwrite:
