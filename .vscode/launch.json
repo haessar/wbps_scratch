@@ -5,16 +5,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: analyse_schistosome_orthogroups.py",
+            "name": "Python Debugger: schisto_orthogroup_pipeline_12.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "analyse_schistosome_orthogroups.py",
+            "program": "schisto_orthogroup_pipeline_12.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                // "--hog", "N0.HOG0000023",
-                // "--do-plot",
-                "--load-blast"
+                "data/from_MARS/OrthoFinder/Results_May21/",
+                // "--hog", "N0.HOG0004858",
+                "--do-plot",
+                "--load-blast",
+                // "--clade", "1"
+            ]
+        },
+        {
+            "name": "Python Debugger: schisto_orthogroup_pipeline_8.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "schisto_orthogroup_pipeline_8.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "data/from_MARS/OrthoFinder/Results_May10/",
+                // "--hog", "N0.HOG0004858",
+                "--do-plot",
+                "--load-blast",
+                // "--clade", "1"
             ]
         },
             "type": "debugpy",
