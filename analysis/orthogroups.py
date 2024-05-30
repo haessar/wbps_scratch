@@ -4,9 +4,11 @@ from collections import Counter, UserList, defaultdict
 import configparser
 import csv
 from datetime import datetime
+from itertools import combinations
 import os.path
 
 from matplotlib import pyplot as plt
+from minineedle import needle
 import pandas as pd
 import pygenometracks.tracksClass
 from pygenometracks.tracks.BedTrack import DEFAULT_BED_COLOR
@@ -18,6 +20,7 @@ from utils.gffutils import init_db
 
 CHROM_LABEL = "X"
 WBPS_RELEASE = "WBPS19"
+MAX_NEEDLE_SEQ_LEN = 200
 
 
 def main(args, species_list):
@@ -26,6 +29,12 @@ def main(args, species_list):
     do_plot = args.do_plot or bool(args.hog)
     table_path = format_output_table_path(args.results_label, args.hog, args.clade)
     makedirs(table_path)
+    table_cols = ["HOG", "selected_transcripts", "exon_counts", "protein_lengths", "gene_counts", "transcript_counts"]
+    if args.align or args.load_blast:
+        table_cols += ["worst_transcript", "worst_pair", "blast_pident"]
+    if args.align:
+        table_cols += ["align_pident"]       
+    pd.DataFrame(columns=table_cols).to_csv(table_path, mode="a", index=False, header=True, sep="\t")
     conf_dir = os.path.join("data", "configs", args.results_label, "")
     plot_dir = os.path.join("plots", args.results_label, "")
     if do_plot:
@@ -41,14 +50,18 @@ def main(args, species_list):
             do_plot=do_plot,
             overwrite=args.overwrite,
             table_path=table_path,
+            table_cols=table_cols,
             conf_dir=conf_dir,
             plot_dir=plot_dir,
         ) as og:
             og.parse_exons()
             if not og.skip_plot:
                 og.plot_tracks()
+            if args.align:
+                og.find_transcript_with_worst_global_alignment(args.clade)
             if args.load_blast:
-                og.find_transcripts_with_lowest_pident(args.clade)
+                og.find_transcripts_with_worst_blast(args.clade)
+            
 
 
 def parse_args():
@@ -61,6 +74,7 @@ def parse_args():
     parser.add_argument('--do-plot', action='store_true')
     parser.add_argument('--overwrite', action='store_true')
     parser.add_argument('--load-blast', action='store_true')
+    parser.add_argument('--align', action="store_true")
     parser.add_argument('--clade', type=int, default=None)
     args = parser.parse_args()
     args.hog_path = os.path.join(args.of_out_dir, "Phylogenetic_Hierarchical_Orthogroups", "N0.tsv")
@@ -261,14 +275,15 @@ class NewSpeciesClade(Schistosoma):
 
 
 class OrthoGroup:
-    def __init__(self, row, species_list, do_plot, overwrite, table_path, conf_dir, plot_dir):
+    def __init__(self, row, species_list, do_plot, overwrite, table_path, table_cols, conf_dir, plot_dir):
         self.label = row["HOG"]
         self.row = row
         self.species_list = species_list
         self.do_plot = do_plot
-        self.skip_plot = False
+        self.skip_plot = True
         self.overwrite = overwrite
         self.table_path = table_path
+        self.table_cols = table_cols
         self.conf_path = os.path.join(conf_dir, self.label + ".ini")
         self.plot_path = os.path.join(plot_dir, self.label + ".png")
         self.parser = configparser.ConfigParser() if self.do_plot else None
@@ -279,9 +294,10 @@ class OrthoGroup:
         self.exon_counts = []
         self.gene_counts = []
         self.transcript_counts = []
-        self.min_pident = 0
-        self.worst_pair = {}
-        self.worst_transcript = {}
+        self.worst_pair = tuple()
+        self.worst_transcript = ""
+        self.blast_pident = None
+        self.align_pident = None
     
     def parse_exons(self):
         for sp in self.species_list:
@@ -310,30 +326,63 @@ class OrthoGroup:
         fig.clear()
         plt.close(fig)
     
-    def find_transcripts_with_lowest_pident(self, clade=None):
+    def find_transcripts_with_worst_blast(self, clade=None):
         if not BLASTOUT.empty:
-            orthologue_seq_ids = [SEQUENCE_ID[tid] for tid in self.selected_transcripts.values()]
-            if clade:
-                species_ids = self.species_list.get_species_ids_for_clade(clade)
-                orthologue_seq_ids = [i for i in orthologue_seq_ids if i.startswith(species_ids)]
-            worst_batch = \
-                BLASTOUT[(BLASTOUT["qseqid"].isin(orthologue_seq_ids)) & (BLASTOUT["sseqid"].isin(orthologue_seq_ids))] \
-                    .sort_values("pident").head(7)
-            culprit = Counter(flatten_list_to_list(worst_batch[["qseqid", "sseqid"]].values)).most_common(1)[0][0]
-            worst_pair = worst_batch[(worst_batch["qseqid"] == culprit) | (worst_batch["sseqid"] == culprit)].head(1)[["qseqid", "sseqid", "pident"]].values[0]
-            seq_id_map = {k: SEQUENCE_ID[k] for k in self.selected_transcripts.values()}
-            self.worst_transcript = {sp.data_label: seqid for sp, seqid in self.selected_transcripts.items() if seqid in [k for k, v in seq_id_map.items() if v==culprit]}
-            self.worst_pair = {sp.data_label: seqid for sp, seqid in self.selected_transcripts.items() if seqid in (k for k, v in seq_id_map.items() if v in worst_pair[:2])}
-            self.min_pident = worst_pair[2]
+            if self.worst_pair:
+                worst_batch = BLASTOUT[BLASTOUT["qseqid"].isin(map(SEQUENCE_ID.get, self.worst_pair)) & BLASTOUT["sseqid"].isin(map(SEQUENCE_ID.get, self.worst_pair))]
+            else:
+                orthologue_seq_ids = [SEQUENCE_ID[tid] for tid in self.selected_transcripts.values()]
+                if clade:
+                    species_ids = self.species_list.get_species_ids_for_clade(clade)
+                    orthologue_seq_ids = [i for i in orthologue_seq_ids if i.startswith(species_ids)]
+                inv_seq_id_map = {v: k for k, v in SEQUENCE_ID.items()}
+                batch = BLASTOUT[(BLASTOUT["qseqid"].isin(orthologue_seq_ids)) & (BLASTOUT["sseqid"].isin(orthologue_seq_ids))]
+                culprit = Counter(flatten_list_to_list(batch.sort_values("pident").head(len(orthologue_seq_ids) - 1)[["qseqid", "sseqid"]].values)).most_common(1)[0][0]
+                worst_batch = batch[(batch["qseqid"] == culprit) | (batch["sseqid"] == culprit)].head(1)
+                self.worst_pair = tuple(worst_batch[["qseqid", "sseqid"]].map(inv_seq_id_map.get).values[0])
+                self.worst_transcript = inv_seq_id_map[culprit]
+            try:
+                self.blast_pident = float(worst_batch["pident"])
+            except TypeError:
+                print(f"No BLAST result for {self.worst_pair}.")
         else:
             raise Exception("This method requires BLASTOUT to be loaded for each species.")
 
+    def find_transcript_with_worst_global_alignment(self, clade=None):
+        orthologue_seq_ids = self.selected_transcripts.items()
+        if clade:
+            orthologue_seq_ids = dict([i for i in orthologue_seq_ids if i[0].clade == clade])
+        alignments = {}
+        safe_tid = set()
+        for pair in combinations(orthologue_seq_ids, 2):
+            pair_tids = tuple(tid for _, tid in pair)
+            if safe_tid.issuperset(pair_tids):
+                continue
+            seqs = [sp.get_protein_sequence(tid) for sp, tid in pair]
+            # Takes a real performance hit if protein sequences are too long
+            if min([len(s) for s in seqs]) > MAX_NEEDLE_SEQ_LEN:
+                return
+            alg = needle.NeedlemanWunsch(*seqs)
+            alg.align()
+            pident = alg.get_identity()
+            # If a given pair of sequences have good global alignment, chances are neither is the culprit.
+            if pident > 90:
+                safe_tid.update(pair_tids)
+            alignments[pair_tids] = alg.get_identity()
+        batch = sorted(alignments.items(), key=lambda x: x[1])[:len(orthologue_seq_ids) - 1]
+        culprit = Counter(flatten_list_to_list([p for p, _ in batch])).most_common(1)[0][0]
+        self.worst_pair, min_pident = [p for p in batch if culprit in p[0]][0]
+        self.worst_transcript = culprit
+        self.align_pident = min_pident
+
+
     def __enter__(self):
-        if self.do_plot and os.path.exists(self.conf_path) and os.path.exists(self.plot_path) and not self.overwrite:
-            print(f"{self.plot_path} already exists.")
-            self.skip_plot = True
-        else:
-            self.skip_plot = False
+        if self.do_plot:
+            if os.path.exists(self.conf_path) and os.path.exists(self.plot_path) and not self.overwrite:
+                print(f"{self.plot_path} already exists.")
+                self.skip_plot = True
+            else:
+                self.skip_plot = False
         return self
 
     def __exit__(self, type, value, traceback):
@@ -348,9 +397,13 @@ class OrthoGroup:
             }
             if self.worst_transcript:
                 data.update({
-                    "worst_transcript": ", ".join(self.worst_transcript.values()),
-                    "worst_pair": ", ".join(self.worst_pair.values()),
-                    "min_pident": self.min_pident,
+                    "worst_transcript": self.worst_transcript,
+                    "worst_pair": ", ".join(self.worst_pair),
+                    "blast_pident": self.blast_pident,
                 })
-            df = pd.DataFrame([data])
+            if self.align_pident:
+                data.update({
+                    "align_pident": self.align_pident,
+                })
+            df = pd.DataFrame([data], columns=self.table_cols)
             df.to_csv(self.table_path, mode="a", index=False, header=False, sep="\t")
