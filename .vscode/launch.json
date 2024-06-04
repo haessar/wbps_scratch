@@ -34,11 +34,17 @@
                 // "--clade", "1"
             ]
         },
+        {
+            "name": "Python Debugger: find_biologically_interesting_genes.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "find_schistosome_orthogroups.py",
+            "program": "find_biologically_interesting_genes.py",
             "console": "integratedTerminal",
-            "justMyCode": false
+            "args": [
+                "data/from_MARS/pfamout_helixer_hq",
+                "-o", "test_output.txt",
+                "--odb", "exists",
+            ]
         },
         {
             "name": "Python Debugger: prepare_helixer_training_inputs.py",
