@@ -55,3 +55,6 @@ Analyse interesting cases of orthogroup exons based on given statistical metrics
 
 ### `./find_biologically_interesting_genes.py pfamout_path [OPTIONS]`
 For a given **pfamout_path** determine if each protein qualifies  as "biologically interesting" and report such genes (to console or **--output**, if given) that are unique to given tool (i.e. Helixer or BRAKER) based on OrthoFinder orthogroups. If **--combined** option is given, report genes predicted by both tools but not existing in WBPS. If **--odb** option is given, consider only proteins that have orthologues inside/outside Nematoda ODB10 when equal to "exists"/"missing", respectively.
+
+### `venn3_orthogroups.ipynb`
+Create 3-way venn diagram plots of orthogroups from OrthoFinder outputs.
