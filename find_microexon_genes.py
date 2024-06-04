@@ -4,9 +4,9 @@ import sys
 
 import gffutils
 
-helixer = ("data/from_MARS/Schistosoma_mansoni_helixer_full.gff3", "Sm_helixer_full.db")
-wbps = ("data/from_WBPS/schistosoma_mansoni.PRJEA36577.WBPS19.annotations.gff3", "Sm_wbps.db")
-braker3 = ("data/from_MARS/Schistosoma_mansoni_braker3.gff3", "Sm_braker3.db")
+helixer = ("data/from_MARS/Schistosoma_mansoni_helixer_full.gff3", "db/Sman_helixer_full.db")
+wbps = ("data/from_WBPS/schistosoma_mansoni.PRJEA36577.WBPS19.annotations.gff3", "db/Sman_wbps.db")
+braker3 = ("data/from_MARS/Schistosoma_mansoni_braker3.gff3", "db/Sman_braker3.db")
 
 INPUTS = helixer
 MAX_LENGTH = 36
