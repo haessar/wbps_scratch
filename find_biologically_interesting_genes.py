@@ -30,8 +30,6 @@ def find_biologically_interesting_genes(pfamout_path, unique_prots):
                     if int(row[QLEN_IDX]) >= 150:
                         pfam = row[TACC_IDX].split('.')[0]
                         prot = row[QNAM_IDX]
-                        if prot.startswith("g11954"):
-                            print()
                         # Is it associated with transposable elements?
                         if pfam in TE_PFAMS:
                             encountered_te_pfams.append(pfam)
