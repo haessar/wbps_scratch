@@ -58,3 +58,6 @@ For a given **pfamout_path** determine if each protein qualifies  as "biological
 
 ### `venn3_orthogroups.ipynb`
 Create 3-way venn diagram plots of orthogroups from OrthoFinder outputs.
+
+### `global_pident_inference.ipynb`
+Test various formulae for estimating global alignment pident just from BLAST outputs. Outputs residual plots. If there is a good model, it will negate the need to run the inefficient Needleman-Wunsch algorithm for each all-vs-all pairing of sequences to determine global alignment identity.
