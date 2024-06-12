@@ -44,8 +44,8 @@ Run `omamer search` and `omark` for a given protein FASTA file **input** and OMA
 ### `compare_gene_maps.ipynb`
 Analyse the gene maps between Strongyloides stercoralis WBPS18 and WBPS19 releases, produced from my own running of Liftoff (see `get_gene_map.py`) and also the official WBPS mapping pipeline.
 
-### `./filter_Ac_ctg_for_Artemis.sh ctg_num`
-Filter FASTA and GFF files for given **ctg_num** of Ancylostoma ceylanicum and launch Artemis with these as inputs. The hard-coded files need to be available in the directory from which the script is run.
+### `./filter_Xx_ctg_for_Artemis.sh ctg_num`
+Filter FASTA and GFF files for given **ctg_num** of species Xx (so far Ac - Ancylostoma ceylanicum and Sm - Schistosoma mansoni) and launch Artemis with these as inputs. The hard-coded files need to be available in the directory from which the script is run.
 
 ### `./schisto_orthogroup_pipeline_N.py [OPTIONS]`
 For a OrthoFinder orthogroup (HOG) output table, iterate through all orthogroups which contain at least one orthologous transcript from each of a selection of N species, write .bed files of CDS boundaries for each species' transcript, and use pyGenomeTracks to plot the tracks. Plotting now only carried out with **--do-plot** option, while **--overwrite** will overwrite a plot even when it exists. There is an additional TSV output file generated on each run in `data/schistosome_orthogroups/` which contains analysis for each HOG. Several of the TSV columns will only be filled when the option **--load-blast** is supplied (as they rely on BLAST outputs from the OrthoFinder working directory). In addition, supplying **--clade** integer will filter these BLAST-specific data to only the relevant species clade.
