@@ -61,18 +61,10 @@ def main(args, species_list):
             table_cols=table_cols,
             conf_dir=conf_dir,
             plot_dir=plot_dir,
+            args=args
         ) as og:
-            og.ingest_species_data(args.load_blast)
-            if not og.skip_plot:
-                og.plot_tracks()
-            if args.global_ident:
-                if args.global_ident == "needle":
-                    og.find_transcript_with_worst_global_alignment(args.clade)
-                elif args.global_ident == "infer":
-                    og.find_transcript_with_worst_infered_global_alignment(args.clade)
-            if args.load_blast:
-                og.find_transcripts_with_worst_blast(args.clade)
-            
+            og.process()
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -306,7 +298,7 @@ class NewSpeciesClade(Schistosoma):
 
 
 class OrthoGroup:
-    def __init__(self, row, species_list, do_plot, overwrite, table_path, table_cols, conf_dir, plot_dir):
+    def __init__(self, row, species_list, do_plot, overwrite, table_path, table_cols, conf_dir, plot_dir, args):
         self.label = row["HOG"]
         self.row = row
         self.species_list = species_list
@@ -330,8 +322,23 @@ class OrthoGroup:
         self.blast_pident = None
         self.align_pident = None
         self.filtered_blast = pd.DataFrame()
+        self.load_blast = args.load_blast
+        self.global_ident = args.global_ident
+        self.clade = args.clade
     
-    def ingest_species_data(self, load_blast=False):
+    def process(self):
+        self.ingest_species_data()
+        if not self.skip_plot:
+            self.plot_tracks()
+        if self.global_ident:
+            if self.global_ident == "needle":
+                self.find_transcript_with_worst_global_alignment(self.clade)
+            elif self.global_ident == "infer":
+                self.find_transcript_with_worst_infered_global_alignment(self.clade)
+        if self.load_blast:
+            self.find_transcripts_with_worst_blast(self.clade)
+    
+    def ingest_species_data(self):
         for sp in self.species_list:
             prot_ids = self.row[sp.prots_label]
             if type(prot_ids) == float:
@@ -342,14 +349,14 @@ class OrthoGroup:
             self.gene_counts.append(len(gene_ids))
             other_prots_labels = [c for c in self.row.index if c.startswith(sp.genus) and c != sp.prots_label]
             other_transcript_ids = flatten_list_to_set(list(map(str.strip, p.split(", "))) for p in self.row.filter(items=other_prots_labels).to_list())
-            transcript, exons = sp.select_transcript(transcript_ids, other_transcript_ids, load_blast)
+            transcript, exons = sp.select_transcript(transcript_ids, other_transcript_ids, self.load_blast)
             transcript_id = transcript.id.split(":")[1]
             self.selected_transcripts[sp] = transcript_id
             self.max_end = max(self.max_end, transcript.end - transcript.start)
             self.clade_exons[sp.clade].append(len(exons))
             self.prot_lengths[transcript_id] = sp.get_amino_acid_count(exons)
             self.exon_counts[transcript_id] = len(exons)
-            if load_blast:
+            if self.load_blast:
                 self.filtered_blast = pd.concat([self.filtered_blast, sp.blast_slice[sp.blast_slice["transcript_id"]==SEQ_ID_MAP[transcript_id]]])
             if not self.skip_plot:
                 sp.write_bed_for_single_transcript_exons(exons)
