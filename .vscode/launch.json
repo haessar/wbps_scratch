@@ -30,7 +30,9 @@
                 "data/from_MARS/OrthoFinder/Results_May10/",
                 // "--hog", "N0.HOG0004858",
                 "--do-plot",
+                "--overwrite",
                 "--load-blast",
+                "--global-ident", "infer",
                 // "--clade", "1"
             ]
         },

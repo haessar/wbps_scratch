@@ -4,18 +4,24 @@ from collections import Counter, UserList, defaultdict
 import configparser
 import csv
 from datetime import datetime
+from glob import glob
 from itertools import combinations
 import os.path
+import re
+import sys
 
+import dask.dataframe as dd
 from matplotlib import pyplot as plt
 from minineedle import needle
+from natsort import natsorted
 import pandas as pd
 import pygenometracks.tracksClass
 from pygenometracks.tracks.BedTrack import DEFAULT_BED_COLOR
 import pysam
 from tqdm import tqdm
+from tqdm.dask import TqdmCallback
 
-from utils.generic import flatten_list_to_list, makedirs
+from utils.generic import flatten_list_to_list, flatten_list_to_set, makedirs
 from utils.gffutils import init_db
 
 CHROM_LABEL = "X"
@@ -24,16 +30,18 @@ MAX_NEEDLE_SEQ_LEN = 200
 
 
 def main(args, species_list):
+    global SEQ_ID_MAP
+    SEQ_ID_MAP = SequenceIDMapping(args.wd_path)
     df = init_orthogroup_df(args.hog_path)
     
     do_plot = args.do_plot or bool(args.hog)
     table_path = format_output_table_path(args.results_label, args.hog, args.clade)
     makedirs(table_path)
     table_cols = ["HOG", "selected_transcripts", "exon_counts", "protein_lengths", "gene_counts", "transcript_counts"]
-    if args.align or args.load_blast:
+    if args.global_ident or args.load_blast:
         table_cols += ["worst_transcript", "worst_pair", "blast_pident"]
-    if args.align:
-        table_cols += ["align_pident"]       
+    if args.global_ident:
+        table_cols += ["align_pident"]
     pd.DataFrame(columns=table_cols).to_csv(table_path, mode="a", index=False, header=True, sep="\t")
     conf_dir = os.path.join("data", "configs", args.results_label, "")
     plot_dir = os.path.join("plots", args.results_label, "")
@@ -54,15 +62,17 @@ def main(args, species_list):
             conf_dir=conf_dir,
             plot_dir=plot_dir,
         ) as og:
-            og.parse_exons()
+            og.ingest_species_data(args.load_blast)
             if not og.skip_plot:
                 og.plot_tracks()
-            if args.align:
-                og.find_transcript_with_worst_global_alignment(args.clade)
+            if args.global_ident:
+                if args.global_ident == "needle":
+                    og.find_transcript_with_worst_global_alignment(args.clade)
+                elif args.global_ident == "infer":
+                    og.find_transcript_with_worst_infered_global_alignment(args.clade)
             if args.load_blast:
                 og.find_transcripts_with_worst_blast(args.clade)
             
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -71,10 +81,11 @@ def parse_args():
     )
     parser.add_argument('of_out_dir')
     parser.add_argument('--hog', type=str, default=None)
-    parser.add_argument('--do-plot', action='store_true')
+    parser.add_argument('--do-plot', '-p', action='store_true')
     parser.add_argument('--overwrite', action='store_true')
-    parser.add_argument('--load-blast', action='store_true')
-    parser.add_argument('--align', action="store_true")
+    parser.add_argument('--load-blast', '-l', action='store_true',
+                        required="--global-ident" in sys.argv and sys.argv[sys.argv.index("--global-ident") + 1] == "infer")
+    parser.add_argument('--global-ident', '-g', choices=[None, 'needle', 'infer'], default=None)
     parser.add_argument('--clade', type=int, default=None)
     args = parser.parse_args()
     args.hog_path = os.path.join(args.of_out_dir, "Phylogenetic_Hierarchical_Orthogroups", "N0.tsv")
@@ -97,51 +108,61 @@ def format_output_table_path(results_label, hog=None, clade=None):
     )))}.tsv"""
 
 
-def init_BLASTOUT():
-    global BLASTOUT
-    BLASTOUT = \
-    pd.DataFrame(
-        columns=("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend",
-                 "sstart", "send", "evalue", "bitscore")
-    )
+class SequenceIDMapping:
+    def __init__(self, wd_path):
+        self.map = {}
+        with open(os.path.join(wd_path, "SequenceIDs.txt"), "r") as f:
+            for l in f:
+                sid, info = l.strip().split(": ")
+                tid = info.split(" ")[0]
+                self.map[tid] = sid
+        self.inv_map = {v: k for k, v in self.map.items()}
+    
+    def __getitem__(self, item):
+        if str(item)[0].isnumeric():
+            return self.inv_map[item]
+        else:
+            return self.map[item]
+    
+    def get(self, item):
+        return self.__getitem__(item)
 
 
-def init_SEQUENCE_ID_map(wd_path):
-    global SEQUENCE_ID
-    SEQUENCE_ID = {}
-    with open(os.path.join(wd_path, "SequenceIDs.txt"), "r") as f:
-        for l in f:
-            sid, info = l.strip().split(": ")
-            tid = info.split(" ")[0]
-            SEQUENCE_ID[tid] = sid
-
-
-def init_SPECIES_ID_map(wd_path):
-    global SPECIES_ID
-    SPECIES_ID = {}
-    with open(os.path.join(wd_path, "SpeciesIDs.txt"), "r") as f:
-        for l in f:
-            sid, prot_path = l.strip().split(": ")
-            data_label = prot_path.split(".protein.fa")[0]
-            SPECIES_ID[data_label] = int(sid)
+class SpeciesIDMapping:
+    def __init__(self, wd_path):
+        self.map = {}
+        with open(os.path.join(wd_path, "SpeciesIDs.txt"), "r") as f:
+            for l in f:
+                sid, prot_path = l.strip().split(": ")
+                data_label = prot_path.split(".protein.fa")[0]
+                self.map[data_label] = int(sid)
+    
+    def __getitem__(self, item):
+        return self.map[item]
 
 
 class SpeciesList(UserList):
     def __init__(self, initlist, args):
-        wd_path = args.wd_path if args.load_blast else None
+        self.data = []
         tmp_dir = os.path.join("data", "tmp", args.results_label, "")
         makedirs(tmp_dir)
-        if wd_path:
-            init_SEQUENCE_ID_map(wd_path)
-            init_SPECIES_ID_map(wd_path)
-            init_BLASTOUT()
-        self.data = []
+        blast_columns = ("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend",
+                "sstart", "send", "evalue", "bitscore")        
         for sp in initlist:
-            sp.species_id = SPECIES_ID[sp.data_label] if wd_path else None
-            sp.wd_path = wd_path
+            sp.species_id = SpeciesIDMapping(args.wd_path)[sp.data_label]
+            seen_pairs = []
+            blast_paths = []
+            for bp in natsorted(glob(os.path.join(args.wd_path, "Blast*"))):
+                pair = sorted(map(int, re.findall(r'\d+', os.path.basename(bp))))
+                if int(sp.species_id) in pair and pair not in seen_pairs and len(set(pair)) == 2:
+                    if args.load_blast:
+                        print(f"loading {bp}...")
+                    blast_paths.append(bp)
+                    seen_pairs.append(pair)
+            blastout = dd.read_csv(blast_paths, names=blast_columns, delimiter="\t", dtype={'bitscore': 'float64'})
+            sp.wd_path = args.wd_path
             sp.tmp_bed_path = os.path.join(tmp_dir, "tmp_{}.bed".format(sp.prefix.lower()))
-            if args.load_blast:
-                sp.load_blastout()
+            sp.slice_blast_data(blastout)
             self.data.append(sp)
 
     def get_species_ids_for_clade(self, clade):
@@ -156,7 +177,7 @@ class Species(ABC):
     data_dir = os.path.join("data", "from_WBPS", "")
     db_dir = "db"
     release = WBPS_RELEASE
-    transcript_selection_method = "_get_longest_transcript"
+    default_transcript_selection_method = "_get_longest_transcript"
 
     def __init__(self, name, acc):
         self.name = name
@@ -168,6 +189,7 @@ class Species(ABC):
         gff_path = os.path.join(self.data_dir, ".".join((self.data_label, "annotations", "gff3")))
         self.prots_path = os.path.join(self.data_dir, ".".join((self.data_label, "protein", "fa")))
         self.db = init_db(gff_path, db_path)
+        self.blast_slice = None
 
     @property
     @abstractmethod
@@ -178,21 +200,22 @@ class Species(ABC):
     @abstractmethod
     def genus(self):
         raise NotImplementedError()
+    
+    def slice_blast_data(self, blastout):
+        left = blastout[(blastout["qseqid"].str.startswith(str(self.species_id))) & ~(blastout["sseqid"].str.startswith(str(self.species_id)))]
+        left = left.rename(columns={"qseqid": "transcript_id", "sseqid": "other_transcript_id"})
+        right = blastout[(blastout["sseqid"].str.startswith(str(self.species_id))) & ~(blastout["qseqid"].str.startswith(str(self.species_id)))]
+        right = right.rename(columns={"qseqid": "other_transcript_id", "sseqid": "transcript_id"})
+        df = dd.concat([left, right], axis=0)
+        self.blast_slice = df
 
-    def load_blastout(self):
-        global BLASTOUT
-        for sp_id in sorted(SPECIES_ID.values()):
-            if sp_id > self.species_id:
-                df = pd.read_csv(
-                        os.path.join(self.wd_path, f"Blast{self.species_id}_{sp_id}.txt"),
-                        names=BLASTOUT.columns,
-                        delimiter="\t"
-                )
-                BLASTOUT = pd.concat([BLASTOUT, df])
-        print("Loaded blastout for species {}".format(self.species_id))
-
-    def select_transcript(self, prot_ids):
-        return getattr(self, self.transcript_selection_method)(prot_ids)
+    def select_transcript(self, prot_ids, other_prot_ids=set(), load_blast=False):
+        if load_blast and self.blast_slice is not None and other_prot_ids:
+            if hasattr(self.blast_slice, "compute"):
+                with TqdmCallback(desc=f"compute blast slice for species {self.species_id}"):
+                    self.blast_slice = self.blast_slice.compute()
+            return self._get_transcript_with_best_blast(prot_ids, other_prot_ids)
+        return getattr(self, self.default_transcript_selection_method)(prot_ids)
 
     def _get_transcript_with_most_exons(self, transcript_ids):
         exon_counts = {}
@@ -209,6 +232,14 @@ class Species(ABC):
             prot_lengths[self.get_amino_acid_count(cds)] = {self.db["transcript:" + tid]: cds}
         for tran, exons in prot_lengths[max(prot_lengths)].items():
             return tran, sorted(exons, key=lambda x: x.start, reverse=tran.strand=="-")
+    
+    def _get_transcript_with_best_blast(self, transcript_ids, other_transcript_ids):
+        filt = self.blast_slice[(self.blast_slice["transcript_id"].isin(map(SEQ_ID_MAP.get, transcript_ids))) &
+                                (self.blast_slice["other_transcript_id"].isin(map(SEQ_ID_MAP.get, other_transcript_ids)))]
+        tid = SEQ_ID_MAP[filt.groupby("transcript_id").median(["pident", "bitscore"]).sort_values(["pident", "bitscore"], ascending=False).head(1).index[0]]
+        tran = self.db["transcript:" + tid]
+        exons = list(self.db.children("transcript:" + tid, featuretype="CDS"))
+        return tran, sorted(exons, key=lambda x: x.start, reverse=tran.strand=="-")
 
     def write_bed_for_single_transcript_exons(self, exons):
         with open(self.tmp_bed_path, "w") as f:
@@ -290,16 +321,17 @@ class OrthoGroup:
         self.max_end = 0
         self.selected_transcripts = {}
         self.clade_exons = defaultdict(list)
-        self.prot_lengths = []
-        self.exon_counts = []
+        self.prot_lengths = {}
+        self.exon_counts = {}
         self.gene_counts = []
         self.transcript_counts = []
         self.worst_pair = tuple()
         self.worst_transcript = ""
         self.blast_pident = None
         self.align_pident = None
+        self.filtered_blast = pd.DataFrame()
     
-    def parse_exons(self):
+    def ingest_species_data(self, load_blast=False):
         for sp in self.species_list:
             prot_ids = self.row[sp.prots_label]
             if type(prot_ids) == float:
@@ -308,12 +340,17 @@ class OrthoGroup:
             gene_ids = set(p.strip().split(".")[0] for p in prot_ids.split(","))
             self.transcript_counts.append(len(transcript_ids))
             self.gene_counts.append(len(gene_ids))
-            transcript, exons = sp.select_transcript(transcript_ids)
-            self.selected_transcripts[sp] = transcript.id.split(":")[1]
+            other_prots_labels = [c for c in self.row.index if c.startswith(sp.genus) and c != sp.prots_label]
+            other_transcript_ids = flatten_list_to_set(list(map(str.strip, p.split(", "))) for p in self.row.filter(items=other_prots_labels).to_list())
+            transcript, exons = sp.select_transcript(transcript_ids, other_transcript_ids, load_blast)
+            transcript_id = transcript.id.split(":")[1]
+            self.selected_transcripts[sp] = transcript_id
             self.max_end = max(self.max_end, transcript.end - transcript.start)
             self.clade_exons[sp.clade].append(len(exons))
-            self.prot_lengths.append(sp.get_amino_acid_count(exons))
-            self.exon_counts.append(len(exons))
+            self.prot_lengths[transcript_id] = sp.get_amino_acid_count(exons)
+            self.exon_counts[transcript_id] = len(exons)
+            if load_blast:
+                self.filtered_blast = pd.concat([self.filtered_blast, sp.blast_slice[sp.blast_slice["transcript_id"]==SEQ_ID_MAP[transcript_id]]])
             if not self.skip_plot:
                 sp.write_bed_for_single_transcript_exons(exons)
                 self.parser["test bed {}".format(sp.prefix)] = sp.bed_track_config(transcript)
@@ -325,28 +362,31 @@ class OrthoGroup:
         fig = trp.plot(self.plot_path, CHROM_LABEL, 0, self.max_end)
         fig.clear()
         plt.close(fig)
-    
+
     def find_transcripts_with_worst_blast(self, clade=None):
-        if not BLASTOUT.empty:
-            if self.worst_pair:
-                worst_batch = BLASTOUT[BLASTOUT["qseqid"].isin(map(SEQUENCE_ID.get, self.worst_pair)) & BLASTOUT["sseqid"].isin(map(SEQUENCE_ID.get, self.worst_pair))]
-            else:
-                orthologue_seq_ids = [SEQUENCE_ID[tid] for tid in self.selected_transcripts.values()]
-                if clade:
-                    species_ids = self.species_list.get_species_ids_for_clade(clade)
-                    orthologue_seq_ids = [i for i in orthologue_seq_ids if i.startswith(species_ids)]
-                inv_seq_id_map = {v: k for k, v in SEQUENCE_ID.items()}
-                batch = BLASTOUT[(BLASTOUT["qseqid"].isin(orthologue_seq_ids)) & (BLASTOUT["sseqid"].isin(orthologue_seq_ids))]
-                culprit = Counter(flatten_list_to_list(batch.sort_values("pident").head(len(orthologue_seq_ids) - 1)[["qseqid", "sseqid"]].values)).most_common(1)[0][0]
-                worst_batch = batch[(batch["qseqid"] == culprit) | (batch["sseqid"] == culprit)].head(1)
-                self.worst_pair = tuple(worst_batch[["qseqid", "sseqid"]].map(inv_seq_id_map.get).values[0])
-                self.worst_transcript = inv_seq_id_map[culprit]
-            try:
-                self.blast_pident = float(worst_batch["pident"])
-            except TypeError:
-                print(f"No BLAST result for {self.worst_pair}.")
+        if self.worst_pair:
+            for sp, tid in self.selected_transcripts.items():
+                if tid in self.worst_pair:
+                    worst_batch = sp.blast_slice[(sp.blast_slice["transcript_id"] == SEQ_ID_MAP[tid]) &
+                                                 (sp.blast_slice["other_transcript_id"].isin(map(SEQ_ID_MAP.get, self.worst_pair)))]
+                    break
         else:
-            raise Exception("This method requires BLASTOUT to be loaded for each species.")
+            if not clade:
+                selected_transcripts = self.selected_transcripts
+            else:
+                species_ids = self.species_list.get_species_ids_for_clade(clade)
+                selected_transcripts = {k: v for k, v in self.selected_transcripts.items() if SEQ_ID_MAP[v].startswith(species_ids)}
+            batch = self.filtered_blast[
+                (self.filtered_blast["transcript_id"].isin(map(SEQ_ID_MAP.get, selected_transcripts.values()))) & 
+                (self.filtered_blast["other_transcript_id"].isin(map(SEQ_ID_MAP.get, selected_transcripts.values())))]
+            culprit = Counter(flatten_list_to_list(batch.sort_values("pident").head(len(selected_transcripts) - 1)[["transcript_id"]].values)).most_common(1)[0][0]
+            worst_batch = batch[(batch["transcript_id"] == culprit) | (batch["other_transcript_id"] == culprit)].sort_values(["pident", "bitscore"]).head(1)
+            self.worst_pair = tuple(worst_batch[["transcript_id", "other_transcript_id"]].map(SEQ_ID_MAP.get).values[0])
+            self.worst_transcript = SEQ_ID_MAP[culprit]
+        try:
+            self.blast_pident = float(worst_batch["pident"])
+        except TypeError:
+            print(f"No BLAST result for {self.worst_pair}.")
 
     def find_transcript_with_worst_global_alignment(self, clade=None):
         orthologue_seq_ids = self.selected_transcripts.items()
@@ -368,13 +408,34 @@ class OrthoGroup:
             # If a given pair of sequences have good global alignment, chances are neither is the culprit.
             if pident > 90:
                 safe_tid.update(pair_tids)
-            alignments[pair_tids] = alg.get_identity()
+            alignments[pair_tids] = pident
         batch = sorted(alignments.items(), key=lambda x: x[1])[:len(orthologue_seq_ids) - 1]
         culprit = Counter(flatten_list_to_list([p for p, _ in batch])).most_common(1)[0][0]
         self.worst_pair, min_pident = [p for p in batch if culprit in p[0]][0]
         self.worst_transcript = culprit
         self.align_pident = min_pident
 
+    def find_transcript_with_worst_infered_global_alignment(self, clade=None):
+        if clade:
+            orthologue_seq_ids = [tid for sp, tid in self.selected_transcripts.items() if sp.clade == clade]
+        else:
+            orthologue_seq_ids = self.selected_transcripts.values()
+        alignments = {}
+        for pair in combinations(orthologue_seq_ids, 2):
+            tr1, tr2 = pair[0], pair[1]
+            blast = self.filtered_blast[(self.filtered_blast["transcript_id"]==SEQ_ID_MAP[tr1]) &
+                                    (self.filtered_blast["other_transcript_id"]==SEQ_ID_MAP[tr2])]
+            align_length = blast["length"].astype(int)
+            if align_length.empty:
+                continue
+            lens = [self.prot_lengths[tr1], self.prot_lengths[tr2]]
+            pident = float(align_length / max(lens) * 100)
+            alignments[pair] = pident
+        batch = sorted(alignments.items(), key=lambda x: x[1])[:len(orthologue_seq_ids) - 1]
+        culprit = Counter(flatten_list_to_list([p for p, _ in batch])).most_common(1)[0][0]
+        self.worst_pair, min_pident = [p for p in batch if culprit in p[0]][0]
+        self.worst_transcript = culprit
+        self.align_pident = min_pident
 
     def __enter__(self):
         if self.do_plot:
@@ -390,8 +451,8 @@ class OrthoGroup:
             data = {
                 "HOG": self.label,
                 "selected_transcripts": ", ".join(self.selected_transcripts.values()),
-                "exon_counts": ", ".join(map(str, self.exon_counts)),
-                "protein_lengths": ", ".join(map(str, self.prot_lengths)),
+                "exon_counts": ", ".join(map(str, self.exon_counts.values())),
+                "protein_lengths": ", ".join(map(str, self.prot_lengths.values())),
                 "gene_counts": ", ".join(map(str, self.gene_counts)),
                 "transcript_counts": ", ".join(map(str, self.transcript_counts)),
             }
