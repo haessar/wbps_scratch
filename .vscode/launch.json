@@ -29,10 +29,11 @@
             "args": [
                 "data/from_MARS/OrthoFinder/Results_May10/",
                 // "--hog", "N0.HOG0004858",
-                "--do-plot",
-                "--overwrite",
+                // "--do-plot",
+                "--overwrite-plot",
                 "--load-blast",
                 "--global-ident", "infer",
+                "--resume", "/home/will/wbp_scratch/data/schistosome_orthogroups/Results_May10/table_2024_07_09_15_19_48.tsv"
                 // "--clade", "1"
             ]
         },

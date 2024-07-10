@@ -6,6 +6,7 @@ import csv
 from datetime import datetime
 from glob import glob
 from itertools import combinations
+import os
 import os.path
 import re
 import sys
@@ -42,13 +43,34 @@ def main(args, species_list):
         table_cols += ["worst_transcript", "worst_pair", "blast_pident"]
     if args.global_ident:
         table_cols += ["align_pident"]
-    pd.DataFrame(columns=table_cols).to_csv(table_path, mode="a", index=False, header=True, sep="\t")
     conf_dir = os.path.join("data", "configs", args.results_label, "")
     plot_dir = os.path.join("plots", args.results_label, "")
     if do_plot:
         makedirs([conf_dir, plot_dir])
-    if args.hog:
-        df = df[df["HOG"] == args.hog]
+    if args.resume is not None:
+        output_dir = os.path.dirname(table_path)
+        # If path to resume given explicitly...
+        if args.resume:
+            if not os.path.exists(args.resume):
+                raise Exception("--resume path {} does not exist.".format(args.resume))
+            else:
+                file_to_resume = args.resume
+                if os.path.basename(os.path.dirname(file_to_resume)) != os.path.basename(output_dir):
+                    raise Exception("Ensure you are resuming from the same set of OrthoFinder results.")
+        # ... else use latest output file.
+        else:
+            output_files = os.listdir(output_dir)
+            dtpat = re.compile("\d{4}_\d{2}_\d{2}_\d{2}_\d{2}_\d{2}")
+            file_to_resume = sorted(output_files, key=lambda x: datetime.strptime(dtpat.search(x).group(0), '%Y_%m_%d_%H_%M_%S'))[-1]
+        output_df = pd.read_csv(os.path.join(output_dir, file_to_resume), sep="\t")
+        if output_df.columns.to_list() != table_cols:
+            raise Exception("Ensure arguments match the latest run you want to --resume from.")
+        df = df[~df["HOG"].isin(output_df["HOG"])]
+        table_path = file_to_resume
+    else:
+        if args.hog:
+            df = df[df["HOG"] == args.hog]
+        pd.DataFrame(columns=table_cols).to_csv(table_path, mode="a", index=False, header=True, sep="\t")
     for _, row in tqdm(df.iterrows(), total=len(df.dropna())):
         if any(row.isna()) and not bool(args.hog):
             break
@@ -56,7 +78,7 @@ def main(args, species_list):
             row=row,
             species_list=species_list,
             do_plot=do_plot,
-            overwrite=args.overwrite,
+            overwrite=args.overwrite_plot,
             table_path=table_path,
             table_cols=table_cols,
             conf_dir=conf_dir,
@@ -72,9 +94,11 @@ def parse_args():
         description="visualise and gather stats for orthogroups from OrthoFinder output",
     )
     parser.add_argument('of_out_dir')
-    parser.add_argument('--hog', type=str, default=None)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--hog', type=str, default=None)
+    group.add_argument('--resume', '-r', nargs='?', const='')
     parser.add_argument('--do-plot', '-p', action='store_true')
-    parser.add_argument('--overwrite', action='store_true')
+    parser.add_argument('--overwrite-plot', action='store_true')
     parser.add_argument('--load-blast', '-l', action='store_true',
                         required="--global-ident" in sys.argv and sys.argv[sys.argv.index("--global-ident") + 1] == "infer")
     parser.add_argument('--global-ident', '-g', choices=[None, 'needle', 'infer'], default=None)
