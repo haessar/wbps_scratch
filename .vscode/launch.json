@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: filter_longest_transcripts.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "filter_longest_transcripts.py",
+            "console": "integratedTerminal",
+            "args": [
+                "/home/will/wbp_scratch/data/from_MARS/Schistosoma_mansoni_braker3_full.gff3",
+            ]
+        },
+        {
             "name": "Python Debugger: schisto_orthogroup_pipeline_12.py",
             "type": "debugpy",
             "request": "launch",

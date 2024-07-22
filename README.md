@@ -61,3 +61,6 @@ Create 3-way venn diagram plots of orthogroups from OrthoFinder outputs.
 
 ### `global_pident_inference.ipynb`
 Test various formulae for estimating global alignment pident just from BLAST outputs. Outputs residual plots. If there is a good model, it will negate the need to run the inefficient Needleman-Wunsch algorithm for each all-vs-all pairing of sequences to determine global alignment identity.
+
+### `./filter_longest_transcripts.py input_gff3`
+Iterates through all genes for a given **input_gff** and selects the transcript with longest protein coding length. Prints each gene, longest transcript and all its child features to stdout.
