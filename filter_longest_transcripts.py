@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser.add_argument('input_gff3')
     args = parser.parse_args()
 
-    db = init_db(args.input_gff3, "db/" + os.path.splitext(os.path.basename(args.input_gff3))[0] + ".db")
+    db = init_db(args.input_gff3, os.path.splitext(os.path.basename(args.input_gff3))[0] + ".db")
     for gene in db.all_features(featuretype="gene"):
         transcripts = list(db.children(gene, featuretype="mRNA"))
         if len(transcripts) > 1:
