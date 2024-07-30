@@ -2,7 +2,7 @@
 import argparse
 import os.path
 
-from analysis.orthogroups import Species
+from orthologue_analysis.species import Species
 from utils.gffutils import init_db
 
 

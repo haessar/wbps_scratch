@@ -1,16 +1,19 @@
 #! /usr/bin/env python3
-from analysis.orthogroups import (
+from orthologue_analysis import (
+    parse_args,
+    main
+)
+from orthologue_analysis.species import (
     SpeciesList,
     HaematobiumClade,
     MansoniClade,
     JaponicumClade,
-    parse_args,
-    main
 )
+
 
 if __name__ == "__main__":
     args = parse_args()
-    
+
     SPECIES_LIST = SpeciesList([
         HaematobiumClade("bovis", "TD2_PRJEB44434"),
         HaematobiumClade("curassoni", "PRJEB44434"),
@@ -21,7 +24,7 @@ if __name__ == "__main__":
         MansoniClade("mansoni", "PRJEA36577"),
         JaponicumClade("japonicum", "PRJNA520774"),
         ],
-        args
+        **vars(args)
     )
 
     main(args, SPECIES_LIST)

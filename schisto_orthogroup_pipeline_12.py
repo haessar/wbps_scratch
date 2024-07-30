@@ -1,14 +1,17 @@
 #! /usr/bin/env python3
-from analysis.orthogroups import (
+from orthologue_analysis import (
+    parse_args,
+    main
+)
+from orthologue_analysis.species import (
     SpeciesList,
     HaematobiumClade,
     MansoniClade,
     JaponicumClade,
     IndicumClade,
     NewSpeciesClade,
-    parse_args,
-    main
 )
+
 
 if __name__ == "__main__":
     args = parse_args()
@@ -27,7 +30,7 @@ if __name__ == "__main__":
         IndicumClade("spindale", "PRJEB44434"),
         NewSpeciesClade("turkestanicum", "PRJEB44434")
         ],
-        args
+        **vars(args)
     )
 
     main(args, SPECIES_LIST)
