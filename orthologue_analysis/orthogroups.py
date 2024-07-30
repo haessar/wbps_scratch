@@ -163,7 +163,7 @@ class OrthoGroup:
             self.counts.exon[transcript_id] = len(exons)
             if load_blast:
                 self.filtered_blast = pd.concat([self.filtered_blast, sp.blast_slice[sp.blast_slice["transcript_id"]==self.seq_id_map[transcript_id]]])
-            if not plotter.skip:
+            if plotter and not plotter.skip:
                 plotter.max_end = max(plotter.max_end, transcript.end - transcript.start)
                 plotter.write_bed_for_single_transcript_exons(sp, exons)
                 plotter.parser[f"test bed {sp.prefix}"] = plotter.bed_track_config(sp, transcript)
