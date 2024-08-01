@@ -19,7 +19,11 @@ def flatten_list_to_list(li):
 
 
 def makedirs(path_iter):
-        if isinstance(path_iter, str):
-            path_iter = [path_iter]
-        for path in path_iter:
-            Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+    if isinstance(path_iter, str):
+        path_iter = [path_iter]
+    for path in path_iter:
+        Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+
+
+def get_project_root():
+    return Path(__file__).parent.parent

@@ -1,5 +1,7 @@
 import os.path
 
+from utils.generic import get_project_root
+
 
 class SequenceIDMapping:
     def __init__(self, wd_path):
@@ -31,3 +33,11 @@ class SpeciesIDMapping:
 
     def __getitem__(self, item):
         return self.map[item]
+
+
+def orthofinder_paths(label):
+    orthofinder_dir = get_project_root() / "data" / "from_MARS" / "OrthoFinder"
+    return {
+        "orthogroups": orthofinder_dir / "Phylogenetic_Hierarchical_Orthogroups" / label / "N0.tsv",
+        "wd": orthofinder_dir / "WorkingDirectory" / label
+    }
