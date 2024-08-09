@@ -62,3 +62,13 @@ def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
                 tran_filt_accs = set(acc for acc, _ in extract_accessions_from_transcript(tran) if acc in filt)
             if tran_filt_accs:
                 print(f"{tran.seqid} - {tran.id.strip('transcript:')} - {tran_filt_accs}")
+
+    return {
+        "l3_more_expressed": l3_more_expressed,
+        "l3_evenly_expressed": l3_evenly_expressed,
+        "l3_less_expressed": l3_less_expressed,
+        "acc_list3": acc_list3,
+        "acc_product": acc_product,
+    }
+
+
