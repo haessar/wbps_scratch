@@ -12,6 +12,7 @@ import pysam
 from tqdm.dask import TqdmCallback
 
 from utils.gffutils import init_db
+from .constants import BLAST_COLUMNS
 from .utils import SpeciesIDMapping
 
 WBPS_RELEASE = "WBPS19"
@@ -22,8 +23,6 @@ class SpeciesList(UserList):
         wd_path = kwargs["wd_path"]
         load_blast = kwargs.get("load_blast", False)
         self.data = []
-        blast_columns = ("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend",
-                "sstart", "send", "evalue", "bitscore")        
         for sp in initlist:
             sp.id = SpeciesIDMapping(wd_path, sp.prot_meta.filename_suffix)[sp.data_label]
             seen_pairs = []
@@ -36,9 +35,8 @@ class SpeciesList(UserList):
                     blast_paths.append(bp)
                     seen_pairs.append(pair)
             if load_blast:
-                blastout = dd.read_csv(blast_paths, names=blast_columns, delimiter="\t", dtype={'bitscore': 'float64'})
+                blastout = dd.read_csv(blast_paths, names=BLAST_COLUMNS, delimiter="\t", dtype={'bitscore': 'float64'})
                 sp.slice_blast_data(blastout)
-            sp.wd_path = wd_path
             self.data.append(sp)
 
     def get_species_ids_for_clade(self, clade):
@@ -47,6 +45,11 @@ class SpeciesList(UserList):
             if sp.clade == clade:
                 species_ids.add(str(sp.id))
         return tuple(species_ids)
+    
+    def get_species_with_data_label(self, data_label):
+        for sp in self:
+            if sp.data_label == data_label:
+                return sp
 
 
 @dataclasses.dataclass
@@ -54,6 +57,22 @@ class ProteinMeta:
     file_path: str
     filename_suffix: str
     label: str
+
+
+class AltSourceMixin:
+    release = ""
+
+    def __init__(self, *args, **kwargs):
+        self.data_dir = kwargs.pop("data_dir", self.data_dir)
+        super().__init__(*args, **kwargs)
+
+    @property
+    def db_path(self):
+        return os.path.join(self.db_dir, f"{self.abbr}{self.name}.db")
+
+    @property
+    def gff_path(self):
+        return os.path.join(self.data_dir, ".".join((self.data_label, "gff3")))
 
 
 class Species(ABC):
@@ -68,15 +87,21 @@ class Species(ABC):
         self.name = name
         self.prefix = self.abbr + self.name.lower()[:3]
         self.data_label = f"{self.genus}_{self.name}.{acc}.{self.release}" if not data_label else data_label
-        db_path = os.path.join(self.db_dir, f"{self.prefix}_wbps.db")
-        gff_path = os.path.join(self.data_dir, ".".join((self.data_label, "annotations", "gff3")))
-        self.db = init_db(gff_path, db_path)
+        self.db = init_db(self.gff_path, self.db_path)
         self.blast_slice = None
         self.prot_meta = ProteinMeta(
             file_path=os.path.join(self.data_dir, "." + self.data_label + prot_filename_suffix),
             filename_suffix=prot_filename_suffix,
             label=self.data_label + ".".join(prot_filename_suffix.split(".")[:-1])
         )
+ 
+    @property
+    def gff_path(self):
+        return os.path.join(self.data_dir, ".".join((self.data_label, "annotations", "gff3")))
+
+    @property
+    def db_path(self):
+        return os.path.join(self.db_dir, f"{self.prefix}_wbps.db")
 
     @property
     @abstractmethod
