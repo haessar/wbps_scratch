@@ -1,13 +1,16 @@
 from collections import Counter
 import contextlib
+import re
 
+from gffutils.exceptions import FeatureNotFoundError
 import numpy as np
+from tqdm import tqdm
 
 from reannotation.utils import extract_accessions_from_transcript
 from reannotation.statistics import fisher_exact_for_two_lists_of_accessions
 
 
-def interpro_accession_pipeline(db, hog_df, braker_col, wbps_col):
+def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
     # InterPro accessions from all mRNA features in WBPS annotation.
     acc_product = {}
     acc_list1 = []
@@ -16,36 +19,36 @@ def interpro_accession_pipeline(db, hog_df, braker_col, wbps_col):
             acc_product[acc] = prod
             acc_list1.append(acc)
 
-    braker_only = set()
+    tool_only = set()
     wbps_only = set()
     shared_orth = {}
     acc_list3 = []
     for _, row in hog_df.iterrows():
-        if all(row[[braker_col, wbps_col]].isna()):
+        if all(row[[tool_col, wbps_col]].isna()):
             continue
-        if row[braker_col] is np.nan and not row[wbps_col] is np.nan:
+        if row[tool_col] is np.nan and not row[wbps_col] is np.nan:
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
                 wbps_only.add(tid)
                 tran = db["transcript:" + tid]
                 acc_list3.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
-        elif row[wbps_col] is np.nan and not row[braker_col] is np.nan:
-            braker_only.update(p.strip() for p in row[braker_col].split(","))
+        elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
+            tool_only.update(p.strip() for p in row[tool_col].split(","))
         else:
-            shared_orth[row[braker_col]] = row[wbps_col]
+            shared_orth[row[tool_col]] = row[wbps_col]
 
     # Full WBPS accession list with acc_list3 removed
     acc_list1a = list((Counter(acc_list1) - Counter(acc_list3)).elements())
 
-    # Most common InterPro accessions in H contortus gene missed by BRAKER3
+    # Most common InterPro accessions in WBPS gene missed by annotation tool
     l3_more_expressed, l3_evenly_expressed, l3_less_expressed = fisher_exact_for_two_lists_of_accessions(acc_list1a, acc_list3)
     for acc, freq in Counter(acc_list3).most_common():
         try:
             if acc in l3_more_expressed:
-                print(f"{acc}: {freq} - significantly more expressed ({l3_more_expressed[acc]}) - {acc_product[acc]}")
+                print(f"{acc}: {freq} - significantly more frequent ({l3_more_expressed[acc]}) - {acc_product[acc]}")
             elif acc in l3_less_expressed:
-                print(f"{acc}: {freq} - significantly less expressed ({l3_less_expressed[acc]}) - {acc_product[acc]}")
+                print(f"{acc}: {freq} - significantly less frequent ({l3_less_expressed[acc]}) - {acc_product[acc]}")
             else:
-                print(f"{acc}: {freq} - expressed as expected ({l3_evenly_expressed[acc]}) - {acc_product[acc]}")
+                print(f"{acc}: {freq} - occurring as expected ({l3_evenly_expressed[acc]}) - {acc_product[acc]}")
         except KeyError:
             pass
 
