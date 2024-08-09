@@ -65,5 +65,5 @@ Test various formulae for estimating global alignment pident just from BLAST out
 ### `./filter_longest_transcripts.py input_gff3`
 Iterates through all genes for a given **input_gff** and selects the transcript with longest protein coding length. Prints each gene, longest transcript and all its child features to stdout.
 
-### `./reannotation_X.py`
+### `reannotation_X_all.ipynb`
 Perform analysis on reannotation of species X, comparing output of automated tools with canonical WBPS annotation. Parses OrthoFinder results and derives statistics such as InterPro accession frequencies.
