@@ -72,3 +72,14 @@ def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
     }
 
 
+def count_prod_word_occurrence_for_signif_accs(acc_sig_diff_iter, acc_all_occ_iter, acc_product_dict):
+    """
+    For an iterable of significant accessions "acc_sig_diff_iter", count words encountered
+    in their product descriptions (using dict "acc_product_dict") from the iterable of all
+    encountered accessions "acc_all_occ_iter". Prints most commonly occurring words.
+    """
+    words = []
+    for acc in acc_sig_diff_iter:
+        words.extend(re.split(r'\W', acc_product_dict[acc].lower()) * Counter(acc_all_occ_iter)[acc])
+    print(Counter(words).most_common())
+
