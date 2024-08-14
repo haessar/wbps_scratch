@@ -19,7 +19,7 @@
 module load apps/esm
 
 ############# MY CODE #############
-for x in `ls ~/wbp_scratch/data/novel_orthologue_sequences/braker3/folder${SLURM_ARRAY_TASK_ID}`; do
+for x in `find ~/wbp_scratch/data/novel_orthologue_sequences/braker3/folder${SLURM_ARRAY_TASK_ID}`; do
 	esm-fold -i $x -o pdb/ --chunk-size 128 > stdout/$x.stdout
 	tail -1 stdout/$x.stdout >> esm_pLDDTs_acc.txt
 done
