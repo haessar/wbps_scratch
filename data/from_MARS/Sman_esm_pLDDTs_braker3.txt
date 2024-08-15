@@ -1,0 +1,308 @@
+24/08/14 23:48:45 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:45 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:46 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:47 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:47 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:48 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:48 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:48 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:48 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:49 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:50 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:51 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:51 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:51 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:51 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:51 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:52 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:52 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:52 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:53 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:53 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:53 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:54 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:54 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:54 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:54 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:54 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:55 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:55 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:55 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:56 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:56 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:56 | INFO | root | Reading sequences from fasta
+24/08/14 23:48:56 | INFO | root | Reading sequences from fasta
+24/08/14 23:56:41 | INFO | root | Predicted structure for g3439.t1 with length 150, pLDDT 86.8, pTM 0.901 in 2.8s. 1 / 1 completed.
+24/08/14 23:56:47 | INFO | root | Predicted structure for g5712.t1 with length 73, pLDDT 67.9, pTM 0.537 in 3.9s. 1 / 1 completed.
+24/08/14 23:56:47 | INFO | root | Predicted structure for g2225.t1 with length 113, pLDDT 28.4, pTM 0.165 in 4.3s. 1 / 1 completed.
+24/08/14 23:56:47 | INFO | root | Predicted structure for g6553.t1 with length 128, pLDDT 30.2, pTM 0.172 in 4.6s. 1 / 1 completed.
+24/08/14 23:56:48 | INFO | root | Predicted structure for g5472.t1 with length 115, pLDDT 35.3, pTM 0.180 in 4.0s. 1 / 1 completed.
+24/08/14 23:56:50 | INFO | root | Predicted structure for g2036.t1 with length 134, pLDDT 47.8, pTM 0.330 in 4.4s. 1 / 1 completed.
+24/08/14 23:57:23 | INFO | root | Predicted structure for g33.t1 with length 95, pLDDT 36.1, pTM 0.124 in 1.3s. 1 / 1 completed.
+24/08/14 23:57:34 | INFO | root | Predicted structure for g6936.t1 with length 103, pLDDT 29.3, pTM 0.175 in 1.4s. 1 / 1 completed.
+24/08/14 23:57:37 | INFO | root | Predicted structure for g7.t1 with length 197, pLDDT 91.5, pTM 0.913 in 3.7s. 1 / 1 completed.
+24/08/14 23:57:46 | INFO | root | Predicted structure for g3857.t1 with length 365, pLDDT 73.4, pTM 0.779 in 14.5s. 1 / 1 completed.
+24/08/14 23:58:06 | INFO | root | Predicted structure for g2335.t1 with length 98, pLDDT 40.9, pTM 0.233 in 1.3s. 1 / 1 completed.
+24/08/14 23:58:20 | INFO | root | Predicted structure for g3401.t1 with length 125, pLDDT 72.5, pTM 0.665 in 1.8s. 1 / 1 completed.
+24/08/14 23:58:22 | INFO | root | Predicted structure for g3310.t1 with length 103, pLDDT 32.4, pTM 0.098 in 1.4s. 1 / 1 completed.
+24/08/14 23:58:27 | INFO | root | Predicted structure for g2365.t1 with length 603, pLDDT 61.1, pTM 0.597 in 54.8s. 1 / 1 completed.
+24/08/14 23:58:48 | INFO | root | Predicted structure for g4556.t1 with length 671, pLDDT 86.1, pTM 0.913 in 73.9s. 1 / 1 completed.
+24/08/14 23:59:03 | INFO | root | Predicted structure for g8926.t1 with length 42, pLDDT 65.2, pTM 0.412 in 1.2s. 1 / 1 completed.
+24/08/14 23:59:08 | INFO | root | Predicted structure for g7172.t1 with length 182, pLDDT 83.5, pTM 0.872 in 3.3s. 1 / 1 completed.
+24/08/14 23:59:14 | INFO | root | Predicted structure for g4099.t1 with length 98, pLDDT 44.9, pTM 0.276 in 1.4s. 1 / 1 completed.
+24/08/14 23:59:47 | INFO | root | Predicted structure for g4891.t1 with length 161, pLDDT 66.4, pTM 0.571 in 2.8s. 1 / 1 completed.
+24/08/14 23:59:47 | INFO | root | Predicted structure for g5434.t1 with length 363, pLDDT 56.2, pTM 0.436 in 14.2s. 1 / 1 completed.
+24/08/15 00:00:04 | INFO | root | Predicted structure for g6875.t1 with length 80, pLDDT 55.3, pTM 0.217 in 1.2s. 1 / 1 completed.
+24/08/15 00:00:25 | INFO | root | Predicted structure for g4093.t1 with length 745, pLDDT 92.1, pTM 0.922 in 96.7s. 1 / 1 completed.
+24/08/15 00:00:32 | INFO | root | Predicted structure for g4474.t1 with length 126, pLDDT 56.5, pTM 0.397 in 1.8s. 1 / 1 completed.
+24/08/15 00:00:50 | INFO | root | Predicted structure for g35.t1 with length 396, pLDDT 78.0, pTM 0.577 in 17.9s. 1 / 1 completed.
+24/08/15 00:00:51 | INFO | root | Predicted structure for g5841.t1 with length 169, pLDDT 74.7, pTM 0.792 in 2.9s. 1 / 1 completed.
+24/08/15 00:01:08 | INFO | root | Predicted structure for g6600.t1 with length 146, pLDDT 31.2, pTM 0.192 in 2.3s. 1 / 1 completed.
+24/08/15 00:01:22 | INFO | root | Predicted structure for g5810.t1 with length 286, pLDDT 73.7, pTM 0.379 in 8.2s. 1 / 1 completed.
+24/08/15 00:01:31 | INFO | root | Predicted structure for g1623.t1 with length 749, pLDDT 54.1, pTM 0.486 in 98.0s. 1 / 1 completed.
+24/08/15 00:01:38 | INFO | root | Predicted structure for g2516.t1 with length 153, pLDDT 32.9, pTM 0.187 in 2.5s. 1 / 1 completed.
+24/08/15 00:01:50 | INFO | root | Predicted structure for g376.t1 with length 89, pLDDT 36.3, pTM 0.131 in 1.2s. 1 / 1 completed.
+24/08/15 00:01:53 | INFO | root | Predicted structure for g5879.t1 with length 138, pLDDT 60.4, pTM 0.540 in 2.1s. 1 / 1 completed.
+24/08/15 00:02:07 | INFO | root | Predicted structure for g3735.t1 with length 156, pLDDT 53.3, pTM 0.487 in 2.5s. 1 / 1 completed.
+24/08/15 00:02:22 | INFO | root | Predicted structure for g5454.t1 with length 211, pLDDT 53.2, pTM 0.479 in 4.2s. 1 / 1 completed.
+24/08/15 00:02:23 | INFO | root | Predicted structure for g2653.t1 with length 175, pLDDT 80.5, pTM 0.747 in 3.0s. 1 / 1 completed.
+24/08/15 00:02:34 | INFO | root | Predicted structure for g7198.t1 with length 130, pLDDT 27.4, pTM 0.144 in 2.0s. 1 / 1 completed.
+24/08/15 00:02:36 | INFO | root | Predicted structure for g638.t1 with length 305, pLDDT 55.1, pTM 0.235 in 11.6s. 1 / 1 completed.
+24/08/15 00:02:37 | INFO | root | Predicted structure for g5162.t1 with length 81, pLDDT 52.9, pTM 0.333 in 1.2s. 1 / 1 completed.
+24/08/15 00:03:07 | INFO | root | Predicted structure for g1657.t1 with length 142, pLDDT 47.5, pTM 0.475 in 2.2s. 1 / 1 completed.
+24/08/15 00:03:10 | INFO | root | Predicted structure for g7094.t1 with length 424, pLDDT 80.1, pTM 0.567 in 21.3s. 1 / 1 completed.
+24/08/15 00:03:10 | INFO | root | Predicted structure for g636.t1 with length 101, pLDDT 53.8, pTM 0.266 in 1.4s. 1 / 1 completed.
+24/08/15 00:03:21 | INFO | root | Predicted structure for g5325.t1 with length 221, pLDDT 33.7, pTM 0.140 in 4.6s. 1 / 1 completed.
+24/08/15 00:03:22 | INFO | root | Predicted structure for g2465.t1 with length 637, pLDDT 75.1, pTM 0.314 in 63.9s. 1 / 1 completed.
+24/08/15 00:03:23 | INFO | root | Predicted structure for g7890.t1 with length 225, pLDDT 54.0, pTM 0.287 in 4.8s. 1 / 1 completed.
+24/08/15 00:03:30 | INFO | root | Predicted structure for g7115.t1 with length 288, pLDDT 89.3, pTM 0.936 in 8.5s. 1 / 1 completed.
+24/08/15 00:03:55 | INFO | root | Predicted structure for g4510.t1 with length 148, pLDDT 52.1, pTM 0.470 in 2.4s. 1 / 1 completed.
+24/08/15 00:03:59 | INFO | root | Predicted structure for g7833.t1 with length 326, pLDDT 88.9, pTM 0.928 in 11.1s. 1 / 1 completed.
+24/08/15 00:04:10 | INFO | root | Predicted structure for g4418.t1 with length 84, pLDDT 63.2, pTM 0.451 in 1.2s. 1 / 1 completed.
+24/08/15 00:04:11 | INFO | root | Predicted structure for g3033.t2 with length 207, pLDDT 78.0, pTM 0.401 in 4.1s. 1 / 1 completed.
+24/08/15 00:04:16 | INFO | root | Predicted structure for g5224.t1 with length 353, pLDDT 69.5, pTM 0.684 in 13.3s. 1 / 1 completed.
+24/08/15 00:04:16 | INFO | root | Predicted structure for g2671.t1 with length 123, pLDDT 70.6, pTM 0.688 in 1.7s. 1 / 1 completed.
+24/08/15 00:04:38 | INFO | root | Predicted structure for g6132.t1 with length 100, pLDDT 62.5, pTM 0.416 in 1.3s. 1 / 1 completed.
+24/08/15 00:04:44 | INFO | root | Predicted structure for g4468.t1 with length 153, pLDDT 55.2, pTM 0.531 in 2.5s. 1 / 1 completed.
+24/08/15 00:04:44 | INFO | root | Predicted structure for g901.t1 with length 955, pLDDT 66.5, pTM 0.602 in 187.5s. 1 / 1 completed.
+24/08/15 00:04:58 | INFO | root | Predicted structure for g3133.t1 with length 119, pLDDT 52.2, pTM 0.351 in 1.7s. 1 / 1 completed.
+24/08/15 00:05:00 | INFO | root | Predicted structure for g439.t1 with length 133, pLDDT 28.1, pTM 0.144 in 2.0s. 1 / 1 completed.
+24/08/15 00:05:09 | INFO | root | Predicted structure for g8425.t1 with length 677, pLDDT 45.6, pTM 0.259 in 75.5s. 1 / 1 completed.
+24/08/15 00:05:23 | INFO | root | Predicted structure for g7002.t1 with length 480, pLDDT 75.7, pTM 0.750 in 29.1s. 1 / 1 completed.
+24/08/15 00:05:24 | INFO | root | Predicted structure for g4533.t1 with length 76, pLDDT 49.0, pTM 0.342 in 1.3s. 1 / 1 completed.
+24/08/15 00:05:25 | INFO | root | Predicted structure for g5481.t1 with length 82, pLDDT 41.7, pTM 0.296 in 1.3s. 1 / 1 completed.
+24/08/15 00:05:30 | INFO | root | Predicted structure for g2910.t1 with length 489, pLDDT 30.0, pTM 0.150 in 30.7s. 1 / 1 completed.
+24/08/15 00:05:33 | INFO | root | Predicted structure for g8733.t1 with length 134, pLDDT 57.4, pTM 0.281 in 2.1s. 1 / 1 completed.
+24/08/15 00:05:42 | INFO | root | Predicted structure for g997.t1 with length 199, pLDDT 69.2, pTM 0.597 in 3.8s. 1 / 1 completed.
+24/08/15 00:05:45 | INFO | root | Predicted structure for g6927.t1 with length 187, pLDDT 59.8, pTM 0.383 in 3.4s. 1 / 1 completed.
+24/08/15 00:05:55 | INFO | root | Predicted structure for g8982.t1 with length 128, pLDDT 78.0, pTM 0.753 in 1.9s. 1 / 1 completed.
+24/08/15 00:06:10 | INFO | root | Predicted structure for g4705.t1 with length 102, pLDDT 49.6, pTM 0.289 in 1.4s. 1 / 1 completed.
+24/08/15 00:06:14 | INFO | root | Predicted structure for g3271.t1 with length 255, pLDDT 65.0, pTM 0.378 in 6.4s. 1 / 1 completed.
+24/08/15 00:06:14 | INFO | root | Predicted structure for g4060.t1 with length 236, pLDDT 57.9, pTM 0.486 in 5.3s. 1 / 1 completed.
+24/08/15 00:06:20 | INFO | root | Predicted structure for g4057.t1 with length 173, pLDDT 54.8, pTM 0.284 in 3.0s. 1 / 1 completed.
+24/08/15 00:06:21 | INFO | root | Predicted structure for g2355.t1 with length 247, pLDDT 35.3, pTM 0.127 in 5.8s. 1 / 1 completed.
+24/08/15 00:06:28 | INFO | root | Predicted structure for g5054.t1 with length 100, pLDDT 33.4, pTM 0.241 in 1.4s. 1 / 1 completed.
+24/08/15 00:06:39 | INFO | root | Predicted structure for g8585.t1 with length 90, pLDDT 36.1, pTM 0.204 in 1.3s. 1 / 1 completed.
+24/08/15 00:06:55 | INFO | root | Predicted structure for g5040.t1 with length 73, pLDDT 43.6, pTM 0.263 in 1.2s. 1 / 1 completed.
+24/08/15 00:07:03 | INFO | root | Predicted structure for g7586.t1 with length 265, pLDDT 87.2, pTM 0.803 in 7.0s. 1 / 1 completed.
+24/08/15 00:07:07 | INFO | root | Predicted structure for g5403.t1 with length 350, pLDDT 71.9, pTM 0.465 in 12.7s. 1 / 1 completed.
+24/08/15 00:07:08 | INFO | root | Predicted structure for g4637.t1 with length 142, pLDDT 52.7, pTM 0.451 in 2.2s. 1 / 1 completed.
+24/08/15 00:07:13 | INFO | root | Predicted structure for g1744.t1 with length 580, pLDDT 83.9, pTM 0.815 in 50.1s. 1 / 1 completed.
+24/08/15 00:07:13 | INFO | root | Predicted structure for g6707.t1 with length 75, pLDDT 41.8, pTM 0.098 in 1.3s. 1 / 1 completed.
+24/08/15 00:07:28 | INFO | root | Predicted structure for g2169.t1 with length 309, pLDDT 74.2, pTM 0.570 in 9.9s. 1 / 1 completed.
+24/08/15 00:07:36 | INFO | root | Predicted structure for g5469.t1 with length 114, pLDDT 80.8, pTM 0.819 in 1.6s. 1 / 1 completed.
+24/08/15 00:07:40 | INFO | root | Predicted structure for g2262.t1 with length 507, pLDDT 44.5, pTM 0.228 in 33.5s. 1 / 1 completed.
+24/08/15 00:07:52 | INFO | root | Predicted structure for g3247.t2 with length 292, pLDDT 76.5, pTM 0.667 in 8.7s. 1 / 1 completed.
+24/08/15 00:07:55 | INFO | root | Predicted structure for g5225.t1 with length 196, pLDDT 70.0, pTM 0.415 in 3.7s. 1 / 1 completed.
+24/08/15 00:07:56 | INFO | root | Predicted structure for g5460.t1 with length 137, pLDDT 42.8, pTM 0.282 in 2.1s. 1 / 1 completed.
+24/08/15 00:07:57 | INFO | root | Predicted structure for g2592.t1 with length 158, pLDDT 74.9, pTM 0.811 in 2.6s. 1 / 1 completed.
+24/08/15 00:07:59 | INFO | root | Predicted structure for g145.t2 with length 202, pLDDT 64.2, pTM 0.509 in 3.9s. 1 / 1 completed.
+24/08/15 00:08:14 | INFO | root | Predicted structure for g3501.t1 with length 77, pLDDT 36.3, pTM 0.147 in 1.3s. 1 / 1 completed.
+24/08/15 00:08:19 | INFO | root | Predicted structure for g7267.t1 with length 199, pLDDT 76.8, pTM 0.567 in 3.8s. 1 / 1 completed.
+24/08/15 00:08:26 | INFO | root | Predicted structure for g8612.t1 with length 134, pLDDT 59.6, pTM 0.532 in 2.0s. 1 / 1 completed.
+24/08/15 00:08:41 | INFO | root | Predicted structure for g3612.t1 with length 105, pLDDT 33.7, pTM 0.182 in 1.5s. 1 / 1 completed.
+24/08/15 00:08:41 | INFO | root | Predicted structure for g6466.t1 with length 115, pLDDT 74.7, pTM 0.575 in 1.6s. 1 / 1 completed.
+24/08/15 00:08:44 | INFO | root | Predicted structure for g6828.t2 with length 296, pLDDT 82.0, pTM 0.667 in 8.8s. 1 / 1 completed.
+24/08/15 00:08:46 | INFO | root | Predicted structure for g5458.t1 with length 214, pLDDT 42.7, pTM 0.417 in 4.3s. 1 / 1 completed.
+24/08/15 00:09:00 | INFO | root | Predicted structure for g8824.t1 with length 82, pLDDT 71.0, pTM 0.591 in 1.3s. 1 / 1 completed.
+24/08/15 00:09:06 | INFO | root | Predicted structure for g4620.t1 with length 266, pLDDT 82.2, pTM 0.875 in 7.1s. 1 / 1 completed.
+24/08/15 00:09:09 | INFO | root | Predicted structure for g332.t1 with length 116, pLDDT 62.7, pTM 0.405 in 1.6s. 1 / 1 completed.
+24/08/15 00:09:21 | INFO | root | Predicted structure for g2166.t1 with length 68, pLDDT 46.5, pTM 0.316 in 1.2s. 1 / 1 completed.
+24/08/15 00:09:28 | INFO | root | Predicted structure for g8969.t1 with length 78, pLDDT 71.4, pTM 0.368 in 1.2s. 1 / 1 completed.
+24/08/15 00:09:32 | INFO | root | Failed (CUDA out of memory) on sequence g3524.t1 of length 2344.
+24/08/15 00:09:46 | INFO | root | Predicted structure for g2570.t1 with length 142, pLDDT 79.0, pTM 0.821 in 2.2s. 1 / 1 completed.
+24/08/15 00:09:46 | INFO | root | Failed (CUDA out of memory) on sequence g1434.t1 of length 2477.
+24/08/15 00:10:02 | INFO | root | Predicted structure for g6933.t1 with length 154, pLDDT 29.1, pTM 0.186 in 2.9s. 1 / 1 completed.
+24/08/15 00:10:09 | INFO | root | Predicted structure for g7000.t1 with length 723, pLDDT 79.0, pTM 0.914 in 89.6s. 1 / 1 completed.
+24/08/15 00:10:20 | INFO | root | Predicted structure for g4717.t1 with length 234, pLDDT 40.6, pTM 0.254 in 5.3s. 1 / 1 completed.
+24/08/15 00:10:30 | INFO | root | Predicted structure for g4302.t3 with length 1554, pLDDT 35.2, pTM 0.315 in 718.4s. 1 / 1 completed.
+24/08/15 00:10:31 | INFO | root | Predicted structure for g7623.t1 with length 103, pLDDT 32.3, pTM 0.200 in 1.4s. 1 / 1 completed.
+24/08/15 00:10:34 | INFO | root | Predicted structure for g3229.t2 with length 101, pLDDT 38.2, pTM 0.175 in 1.4s. 1 / 1 completed.
+24/08/15 00:10:48 | INFO | root | Predicted structure for g4311.t2 with length 137, pLDDT 31.4, pTM 0.168 in 2.1s. 1 / 1 completed.
+24/08/15 00:10:57 | INFO | root | Predicted structure for g8232.t1 with length 564, pLDDT 40.2, pTM 0.257 in 45.1s. 1 / 1 completed.
+24/08/15 00:10:58 | INFO | root | Predicted structure for g1695.t1 with length 136, pLDDT 64.6, pTM 0.575 in 2.1s. 1 / 1 completed.
+24/08/15 00:11:13 | INFO | root | Predicted structure for g3254.t1 with length 302, pLDDT 56.4, pTM 0.337 in 9.3s. 1 / 1 completed.
+24/08/15 00:11:16 | INFO | root | Predicted structure for g6902.t1 with length 113, pLDDT 45.7, pTM 0.266 in 1.6s. 1 / 1 completed.
+24/08/15 00:11:20 | INFO | root | Predicted structure for g8970.t1 with length 172, pLDDT 52.3, pTM 0.356 in 2.9s. 1 / 1 completed.
+24/08/15 00:11:33 | INFO | root | Predicted structure for g4470.t1 with length 49, pLDDT 48.3, pTM 0.297 in 1.3s. 1 / 1 completed.
+24/08/15 00:11:41 | INFO | root | Predicted structure for g2783.t1 with length 102, pLDDT 27.0, pTM 0.128 in 1.4s. 1 / 1 completed.
+24/08/15 00:11:44 | INFO | root | Predicted structure for g8444.t2 with length 484, pLDDT 67.1, pTM 0.724 in 29.7s. 1 / 1 completed.
+24/08/15 00:11:48 | INFO | root | Predicted structure for g1405.t1 with length 137, pLDDT 54.1, pTM 0.521 in 2.1s. 1 / 1 completed.
+24/08/15 00:12:03 | INFO | root | Predicted structure for g2068.t1 with length 91, pLDDT 28.8, pTM 0.130 in 1.2s. 1 / 1 completed.
+24/08/15 00:12:04 | INFO | root | Predicted structure for g8679.t1 with length 283, pLDDT 35.8, pTM 0.086 in 8.1s. 1 / 1 completed.
+24/08/15 00:12:06 | INFO | root | Predicted structure for g4469.t1 with length 22, pLDDT 60.9, pTM 0.117 in 1.2s. 1 / 1 completed.
+24/08/15 00:12:29 | INFO | root | Predicted structure for g5375.t1 with length 108, pLDDT 45.0, pTM 0.109 in 1.5s. 1 / 1 completed.
+24/08/15 00:12:31 | INFO | root | Predicted structure for g4438.t1 with length 342, pLDDT 74.8, pTM 0.486 in 12.4s. 1 / 1 completed.
+24/08/15 00:12:31 | INFO | root | Predicted structure for g90.t1 with length 244, pLDDT 44.9, pTM 0.290 in 5.7s. 1 / 1 completed.
+24/08/15 00:12:35 | INFO | root | Predicted structure for g8133.t1 with length 75, pLDDT 56.3, pTM 0.418 in 1.2s. 1 / 1 completed.
+24/08/15 00:12:46 | INFO | root | Predicted structure for g5006.t2 with length 137, pLDDT 51.9, pTM 0.412 in 2.1s. 1 / 1 completed.
+24/08/15 00:12:52 | INFO | root | Predicted structure for g5813.t1 with length 144, pLDDT 82.9, pTM 0.434 in 2.4s. 1 / 1 completed.
+24/08/15 00:12:57 | INFO | root | Predicted structure for g1395.t1 with length 243, pLDDT 83.7, pTM 0.697 in 5.6s. 1 / 1 completed.
+24/08/15 00:13:15 | INFO | root | Predicted structure for g258.t1 with length 127, pLDDT 48.7, pTM 0.096 in 1.8s. 1 / 1 completed.
+24/08/15 00:13:20 | INFO | root | Predicted structure for g38.t1 with length 155, pLDDT 50.4, pTM 0.341 in 2.5s. 1 / 1 completed.
+24/08/15 00:13:23 | INFO | root | Predicted structure for g2685.t1 with length 154, pLDDT 59.5, pTM 0.288 in 2.5s. 1 / 1 completed.
+24/08/15 00:13:32 | INFO | root | Predicted structure for g7095.t1 with length 91, pLDDT 40.9, pTM 0.171 in 1.3s. 1 / 1 completed.
+24/08/15 00:13:35 | INFO | root | Predicted structure for g138.t1 with length 76, pLDDT 38.7, pTM 0.187 in 1.3s. 1 / 1 completed.
+24/08/15 00:13:44 | INFO | root | Predicted structure for g6416.t1 with length 109, pLDDT 55.0, pTM 0.487 in 1.5s. 1 / 1 completed.
+24/08/15 00:14:02 | INFO | root | Predicted structure for g6297.t1 with length 137, pLDDT 75.1, pTM 0.390 in 2.1s. 1 / 1 completed.
+24/08/15 00:14:14 | INFO | root | Predicted structure for g2055.t1 with length 286, pLDDT 89.6, pTM 0.923 in 8.2s. 1 / 1 completed.
+24/08/15 00:14:16 | INFO | root | Predicted structure for g8343.t1 with length 164, pLDDT 51.8, pTM 0.250 in 2.8s. 1 / 1 completed.
+24/08/15 00:14:21 | INFO | root | Predicted structure for g5363.t1 with length 651, pLDDT 78.8, pTM 0.829 in 68.1s. 1 / 1 completed.
+24/08/15 00:14:23 | INFO | root | Predicted structure for g254.t1 with length 145, pLDDT 43.0, pTM 0.187 in 2.3s. 1 / 1 completed.
+24/08/15 00:14:30 | INFO | root | Predicted structure for g5437.t1 with length 175, pLDDT 36.2, pTM 0.285 in 3.1s. 1 / 1 completed.
+24/08/15 00:15:10 | INFO | root | Predicted structure for g3687.t1 with length 206, pLDDT 80.4, pTM 0.822 in 4.0s. 1 / 1 completed.
+24/08/15 00:15:12 | INFO | root | Predicted structure for g4473.t1 with length 367, pLDDT 61.9, pTM 0.500 in 14.7s. 1 / 1 completed.
+24/08/15 00:15:18 | INFO | root | Predicted structure for g2682.t1 with length 93, pLDDT 76.0, pTM 0.622 in 1.3s. 1 / 1 completed.
+24/08/15 00:15:23 | INFO | root | Predicted structure for g4271.t1 with length 411, pLDDT 81.6, pTM 0.883 in 19.9s. 1 / 1 completed.
+24/08/15 00:15:26 | INFO | root | Predicted structure for g7798.t1 with length 693, pLDDT 69.6, pTM 0.663 in 80.5s. 1 / 1 completed.
+24/08/15 00:15:29 | INFO | root | Predicted structure for g828.t1 with length 485, pLDDT 28.5, pTM 0.129 in 30.1s. 1 / 1 completed.
+24/08/15 00:15:36 | INFO | root | Predicted structure for g6501.t1 with length 573, pLDDT 92.8, pTM 0.935 in 47.7s. 1 / 1 completed.
+24/08/15 00:15:56 | INFO | root | Predicted structure for g2746.t1 with length 209, pLDDT 81.1, pTM 0.828 in 4.3s. 1 / 1 completed.
+24/08/15 00:15:57 | INFO | root | Predicted structure for g7106.t1 with length 170, pLDDT 30.8, pTM 0.121 in 2.9s. 1 / 1 completed.
+24/08/15 00:16:05 | INFO | root | Predicted structure for g3309.t1 with length 173, pLDDT 52.3, pTM 0.324 in 3.0s. 1 / 1 completed.
+24/08/15 00:16:08 | INFO | root | Predicted structure for g2657.t1 with length 153, pLDDT 31.6, pTM 0.153 in 2.5s. 1 / 1 completed.
+24/08/15 00:16:12 | INFO | root | Predicted structure for g4479.t1 with length 42, pLDDT 44.2, pTM 0.178 in 1.2s. 1 / 1 completed.
+24/08/15 00:16:25 | INFO | root | Predicted structure for g3761.t1 with length 202, pLDDT 84.4, pTM 0.830 in 3.9s. 1 / 1 completed.
+24/08/15 00:16:28 | INFO | root | Predicted structure for g8164.t1 with length 336, pLDDT 87.4, pTM 0.904 in 11.9s. 1 / 1 completed.
+24/08/15 00:16:39 | INFO | root | Predicted structure for g4234.t1 with length 101, pLDDT 74.1, pTM 0.455 in 1.4s. 1 / 1 completed.
+24/08/15 00:16:47 | INFO | root | Predicted structure for g6920.t1 with length 271, pLDDT 65.1, pTM 0.375 in 7.4s. 1 / 1 completed.
+24/08/15 00:16:51 | INFO | root | Predicted structure for g3212.t1 with length 204, pLDDT 40.6, pTM 0.257 in 4.0s. 1 / 1 completed.
+24/08/15 00:16:56 | INFO | root | Predicted structure for g1375.t1 with length 87, pLDDT 64.1, pTM 0.438 in 1.2s. 1 / 1 completed.
+24/08/15 00:17:03 | INFO | root | Predicted structure for g7041.t1 with length 367, pLDDT 73.4, pTM 0.410 in 14.7s. 1 / 1 completed.
+24/08/15 00:17:12 | INFO | root | Predicted structure for g8390.t1 with length 219, pLDDT 70.6, pTM 0.536 in 4.6s. 1 / 1 completed.
+24/08/15 00:17:14 | INFO | root | Predicted structure for g4098.t1 with length 136, pLDDT 35.4, pTM 0.169 in 2.1s. 1 / 1 completed.
+24/08/15 00:17:20 | INFO | root | Predicted structure for g1033.t1 with length 1342, pLDDT 23.7, pTM 0.152 in 474.0s. 1 / 1 completed.
+24/08/15 00:17:31 | INFO | root | Predicted structure for g7035.t1 with length 116, pLDDT 38.7, pTM 0.266 in 1.6s. 1 / 1 completed.
+24/08/15 00:17:42 | INFO | root | Predicted structure for g3273.t1 with length 283, pLDDT 62.2, pTM 0.470 in 8.1s. 1 / 1 completed.
+24/08/15 00:17:45 | INFO | root | Predicted structure for g1806.t1 with length 238, pLDDT 45.5, pTM 0.144 in 5.3s. 1 / 1 completed.
+24/08/15 00:17:50 | INFO | root | Predicted structure for g1479.t1 with length 145, pLDDT 83.5, pTM 0.842 in 2.3s. 1 / 1 completed.
+24/08/15 00:17:58 | INFO | root | Predicted structure for g6022.t1 with length 79, pLDDT 48.8, pTM 0.234 in 1.2s. 1 / 1 completed.
+24/08/15 00:18:06 | INFO | root | Predicted structure for g6855.t1 with length 67, pLDDT 65.5, pTM 0.325 in 1.2s. 1 / 1 completed.
+24/08/15 00:18:07 | INFO | root | Predicted structure for g3.t1 with length 291, pLDDT 78.0, pTM 0.606 in 8.7s. 1 / 1 completed.
+24/08/15 00:18:13 | INFO | root | Predicted structure for g7457.t2 with length 588, pLDDT 77.1, pTM 0.696 in 50.7s. 1 / 1 completed.
+24/08/15 00:18:26 | INFO | root | Predicted structure for g2824.t1 with length 39, pLDDT 54.1, pTM 0.157 in 1.3s. 1 / 1 completed.
+24/08/15 00:18:33 | INFO | root | Predicted structure for g7955.t1 with length 176, pLDDT 29.2, pTM 0.117 in 3.1s. 1 / 1 completed.
+24/08/15 00:18:34 | INFO | root | Predicted structure for g4456.t1 with length 132, pLDDT 31.7, pTM 0.128 in 2.0s. 1 / 1 completed.
+24/08/15 00:18:46 | INFO | root | Predicted structure for g1793.t1 with length 113, pLDDT 37.3, pTM 0.258 in 1.6s. 1 / 1 completed.
+24/08/15 00:18:52 | INFO | root | Predicted structure for g5492.t1 with length 147, pLDDT 44.7, pTM 0.266 in 2.3s. 1 / 1 completed.
+24/08/15 00:18:53 | INFO | root | Predicted structure for g4366.t1 with length 1399, pLDDT 34.4, pTM 0.223 in 529.8s. 1 / 1 completed.
+24/08/15 00:18:58 | INFO | root | Predicted structure for g1902.t1 with length 224, pLDDT 70.9, pTM 0.500 in 4.7s. 1 / 1 completed.
+24/08/15 00:18:59 | INFO | root | Predicted structure for g5305.t2 with length 164, pLDDT 39.1, pTM 0.237 in 2.8s. 1 / 1 completed.
+24/08/15 00:19:11 | INFO | root | Predicted structure for g6397.t1 with length 132, pLDDT 75.8, pTM 0.494 in 2.0s. 1 / 1 completed.
+24/08/15 00:19:19 | INFO | root | Predicted structure for g4475.t1 with length 82, pLDDT 34.3, pTM 0.200 in 1.2s. 1 / 1 completed.
+24/08/15 00:19:39 | INFO | root | Predicted structure for g2304.t1 with length 121, pLDDT 62.4, pTM 0.576 in 1.8s. 1 / 1 completed.
+24/08/15 00:19:43 | INFO | root | Predicted structure for g5942.t1 with length 74, pLDDT 68.0, pTM 0.501 in 1.2s. 1 / 1 completed.
+24/08/15 00:19:44 | INFO | root | Predicted structure for g8788.t1 with length 104, pLDDT 39.8, pTM 0.086 in 1.4s. 1 / 1 completed.
+24/08/15 00:19:55 | INFO | root | Predicted structure for g7727.t1 with length 148, pLDDT 65.7, pTM 0.510 in 2.4s. 1 / 1 completed.
+24/08/15 00:19:59 | INFO | root | Predicted structure for g3867.t1 with length 479, pLDDT 37.0, pTM 0.246 in 29.2s. 1 / 1 completed.
+24/08/15 00:20:08 | INFO | root | Predicted structure for g2483.t1 with length 137, pLDDT 37.1, pTM 0.081 in 2.1s. 1 / 1 completed.
+24/08/15 00:20:19 | INFO | root | Predicted structure for g1828.t1 with length 87, pLDDT 55.8, pTM 0.316 in 1.2s. 1 / 1 completed.
+24/08/15 00:20:27 | INFO | root | Predicted structure for g3022.t1 with length 81, pLDDT 46.0, pTM 0.239 in 1.2s. 1 / 1 completed.
+24/08/15 00:20:29 | INFO | root | Predicted structure for g4287.t1 with length 118, pLDDT 51.9, pTM 0.431 in 1.6s. 1 / 1 completed.
+24/08/15 00:20:30 | INFO | root | Predicted structure for g4303.t1 with length 851, pLDDT 54.8, pTM 0.533 in 137.9s. 1 / 1 completed.
+24/08/15 00:20:39 | INFO | root | Predicted structure for g4262.t1 with length 102, pLDDT 28.4, pTM 0.169 in 1.4s. 1 / 1 completed.
+24/08/15 00:20:57 | INFO | root | Predicted structure for g8320.t1 with length 754, pLDDT 70.6, pTM 0.582 in 99.5s. 1 / 1 completed.
+24/08/15 00:21:01 | INFO | root | Predicted structure for g6728.t1 with length 274, pLDDT 63.9, pTM 0.371 in 7.4s. 1 / 1 completed.
+24/08/15 00:21:06 | INFO | root | Predicted structure for g8426.t1 with length 205, pLDDT 30.4, pTM 0.096 in 4.0s. 1 / 1 completed.
+24/08/15 00:21:10 | INFO | root | Predicted structure for g217.t1 with length 734, pLDDT 73.9, pTM 0.327 in 92.7s. 1 / 1 completed.
+24/08/15 00:21:12 | INFO | root | Predicted structure for g224.t1 with length 100, pLDDT 35.4, pTM 0.234 in 1.4s. 1 / 1 completed.
+24/08/15 00:21:13 | INFO | root | Predicted structure for g6738.t1 with length 103, pLDDT 37.4, pTM 0.242 in 1.5s. 1 / 1 completed.
+24/08/15 00:21:13 | INFO | root | Predicted structure for g8032.t1 with length 142, pLDDT 86.2, pTM 0.856 in 2.2s. 1 / 1 completed.
+24/08/15 00:21:26 | INFO | root | Predicted structure for g621.t1 with length 197, pLDDT 80.7, pTM 0.747 in 3.8s. 1 / 1 completed.
+24/08/15 00:21:45 | INFO | root | Predicted structure for g8862.t1 with length 100, pLDDT 29.3, pTM 0.156 in 1.4s. 1 / 1 completed.
+24/08/15 00:21:45 | INFO | root | Predicted structure for g4332.t1 with length 628, pLDDT 73.2, pTM 0.353 in 60.4s. 1 / 1 completed.
+24/08/15 00:21:58 | INFO | root | Predicted structure for g1749.t1 with length 100, pLDDT 49.4, pTM 0.390 in 1.4s. 1 / 1 completed.
+24/08/15 00:21:59 | INFO | root | Predicted structure for g4267.t1 with length 394, pLDDT 84.2, pTM 0.898 in 17.8s. 1 / 1 completed.
+24/08/15 00:22:01 | INFO | root | Predicted structure for g8410.t1 with length 305, pLDDT 89.7, pTM 0.930 in 9.4s. 1 / 1 completed.
+24/08/15 00:22:02 | INFO | root | Predicted structure for g5909.t1 with length 146, pLDDT 70.9, pTM 0.697 in 2.3s. 1 / 1 completed.
+24/08/15 00:22:14 | INFO | root | Predicted structure for g255.t1 with length 449, pLDDT 21.4, pTM 0.142 in 24.9s. 1 / 1 completed.
+24/08/15 00:22:22 | INFO | root | Predicted structure for g1636.t1 with length 344, pLDDT 64.1, pTM 0.386 in 12.5s. 1 / 1 completed.
+24/08/15 00:22:35 | INFO | root | Predicted structure for g7474.t1 with length 179, pLDDT 47.9, pTM 0.257 in 3.1s. 1 / 1 completed.
+24/08/15 00:22:38 | INFO | root | Predicted structure for g7126.t1 with length 294, pLDDT 27.7, pTM 0.140 in 8.7s. 1 / 1 completed.
+24/08/15 00:22:46 | INFO | root | Predicted structure for g2461.t1 with length 121, pLDDT 31.5, pTM 0.206 in 1.7s. 1 / 1 completed.
+24/08/15 00:22:47 | INFO | root | Predicted structure for g2202.t1 with length 151, pLDDT 45.4, pTM 0.316 in 2.5s. 1 / 1 completed.
+24/08/15 00:22:59 | INFO | root | Predicted structure for g2205.t1 with length 146, pLDDT 44.2, pTM 0.292 in 2.3s. 1 / 1 completed.
+24/08/15 00:23:01 | INFO | root | Predicted structure for g4735.t1 with length 78, pLDDT 43.0, pTM 0.284 in 1.2s. 1 / 1 completed.
+24/08/15 00:23:03 | INFO | root | Predicted structure for g7177.t1 with length 385, pLDDT 75.0, pTM 0.763 in 17.1s. 1 / 1 completed.
+24/08/15 00:23:08 | INFO | root | Predicted structure for g5355.t1 with length 445, pLDDT 92.8, pTM 0.957 in 24.2s. 1 / 1 completed.
+24/08/15 00:23:17 | INFO | root | Predicted structure for g2480.t2 with length 698, pLDDT 72.8, pTM 0.761 in 81.7s. 1 / 1 completed.
+24/08/15 00:23:24 | INFO | root | Predicted structure for g9015.t1 with length 91, pLDDT 64.8, pTM 0.527 in 1.2s. 1 / 1 completed.
+24/08/15 00:23:29 | INFO | root | Predicted structure for g5842.t1 with length 70, pLDDT 52.9, pTM 0.292 in 1.2s. 1 / 1 completed.
+24/08/15 00:23:30 | INFO | root | Predicted structure for g1586.t1 with length 23, pLDDT 67.2, pTM 0.086 in 1.2s. 1 / 1 completed.
+24/08/15 00:23:43 | INFO | root | Predicted structure for g1289.t1 with length 124, pLDDT 55.3, pTM 0.245 in 1.8s. 1 / 1 completed.
+24/08/15 00:23:45 | INFO | root | Predicted structure for g2536.t1 with length 113, pLDDT 31.0, pTM 0.172 in 1.6s. 1 / 1 completed.
+24/08/15 00:23:51 | INFO | root | Predicted structure for g7525.t1 with length 221, pLDDT 31.0, pTM 0.135 in 4.6s. 1 / 1 completed.
+24/08/15 00:23:54 | INFO | root | Predicted structure for g1258.t1 with length 164, pLDDT 59.6, pTM 0.448 in 2.8s. 1 / 1 completed.
+24/08/15 00:24:07 | INFO | root | Predicted structure for g7403.t1 with length 207, pLDDT 44.0, pTM 0.192 in 4.1s. 1 / 1 completed.
+24/08/15 00:24:12 | INFO | root | Predicted structure for g8841.t1 with length 107, pLDDT 41.5, pTM 0.258 in 1.5s. 1 / 1 completed.
+24/08/15 00:24:15 | INFO | root | Predicted structure for g5367.t1 with length 595, pLDDT 83.0, pTM 0.894 in 53.6s. 1 / 1 completed.
+24/08/15 00:24:17 | INFO | root | Predicted structure for g1096.t1 with length 81, pLDDT 44.6, pTM 0.270 in 1.3s. 1 / 1 completed.
+24/08/15 00:24:23 | INFO | root | Predicted structure for g4523.t2 with length 379, pLDDT 83.6, pTM 0.749 in 15.8s. 1 / 1 completed.
+24/08/15 00:24:27 | INFO | root | Predicted structure for g5288.t1 with length 177, pLDDT 87.2, pTM 0.804 in 3.1s. 1 / 1 completed.
+24/08/15 00:24:28 | INFO | root | Predicted structure for g5603.t1 with length 153, pLDDT 76.7, pTM 0.680 in 2.5s. 1 / 1 completed.
+24/08/15 00:24:33 | INFO | root | Predicted structure for g6094.t1 with length 120, pLDDT 50.5, pTM 0.391 in 1.7s. 1 / 1 completed.
+24/08/15 00:24:39 | INFO | root | Predicted structure for g5435.t1 with length 133, pLDDT 38.1, pTM 0.359 in 2.1s. 1 / 1 completed.
+24/08/15 00:25:01 | INFO | root | Predicted structure for g245.t1 with length 104, pLDDT 31.9, pTM 0.162 in 1.4s. 1 / 1 completed.
+24/08/15 00:25:02 | INFO | root | Predicted structure for g4660.t1 with length 195, pLDDT 87.4, pTM 0.900 in 3.7s. 1 / 1 completed.
+24/08/15 00:25:05 | INFO | root | Predicted structure for g6914.t1 with length 355, pLDDT 72.1, pTM 0.566 in 13.5s. 1 / 1 completed.
+24/08/15 00:25:06 | INFO | root | Predicted structure for g4522.t1 with length 351, pLDDT 83.9, pTM 0.800 in 13.1s. 1 / 1 completed.
+24/08/15 00:25:07 | INFO | root | Predicted structure for g4310.t1 with length 116, pLDDT 34.9, pTM 0.257 in 1.6s. 1 / 1 completed.
+24/08/15 00:25:16 | INFO | root | Predicted structure for g5364.t2 with length 268, pLDDT 50.5, pTM 0.475 in 7.2s. 1 / 1 completed.
+24/08/15 00:25:17 | INFO | root | Predicted structure for g3925.t1 with length 73, pLDDT 67.4, pTM 0.460 in 1.2s. 1 / 1 completed.
+24/08/15 00:25:47 | INFO | root | Predicted structure for g5718.t1 with length 100, pLDDT 37.3, pTM 0.115 in 1.4s. 1 / 1 completed.
+24/08/15 00:25:50 | INFO | root | Predicted structure for g4079.t2 with length 120, pLDDT 37.8, pTM 0.219 in 1.7s. 1 / 1 completed.
+24/08/15 00:25:57 | INFO | root | Predicted structure for g11.t1 with length 312, pLDDT 64.6, pTM 0.543 in 9.9s. 1 / 1 completed.
+24/08/15 00:26:01 | INFO | root | Predicted structure for g117.t1 with length 124, pLDDT 39.8, pTM 0.074 in 1.7s. 1 / 1 completed.
+24/08/15 00:26:14 | INFO | root | Predicted structure for g4499.t1 with length 362, pLDDT 59.8, pTM 0.515 in 14.3s. 1 / 1 completed.
+24/08/15 00:26:18 | INFO | root | Predicted structure for g10.t1 with length 608, pLDDT 72.3, pTM 0.742 in 56.2s. 1 / 1 completed.
+24/08/15 00:26:33 | INFO | root | Predicted structure for g8664.t1 with length 162, pLDDT 66.6, pTM 0.332 in 2.7s. 1 / 1 completed.
+24/08/15 00:26:35 | INFO | root | Predicted structure for g5104.t1 with length 118, pLDDT 37.1, pTM 0.250 in 1.7s. 1 / 1 completed.
+24/08/15 00:26:41 | INFO | root | Predicted structure for g3333.t1 with length 71, pLDDT 77.2, pTM 0.546 in 1.2s. 1 / 1 completed.
+24/08/15 00:26:47 | INFO | root | Predicted structure for g5461.t1 with length 171, pLDDT 31.0, pTM 0.239 in 2.9s. 1 / 1 completed.
+24/08/15 00:26:56 | INFO | root | Predicted structure for g8030.t1 with length 137, pLDDT 85.1, pTM 0.881 in 2.1s. 1 / 1 completed.
+24/08/15 00:27:15 | INFO | root | Predicted structure for g519.t1 with length 109, pLDDT 57.6, pTM 0.288 in 1.5s. 1 / 1 completed.
+24/08/15 00:27:28 | INFO | root | Predicted structure for g8787.t1 with length 212, pLDDT 94.2, pTM 0.955 in 4.3s. 1 / 1 completed.
+24/08/15 00:27:40 | INFO | root | Predicted structure for g383.t1 with length 110, pLDDT 46.1, pTM 0.242 in 1.5s. 1 / 1 completed.
+24/08/15 00:27:50 | INFO | root | Predicted structure for g617.t1 with length 404, pLDDT 69.9, pTM 0.445 in 18.9s. 1 / 1 completed.
+24/08/15 00:28:00 | INFO | root | Predicted structure for g9087.t1 with length 622, pLDDT 73.0, pTM 0.737 in 59.6s. 1 / 1 completed.
+24/08/15 00:28:02 | INFO | root | Predicted structure for g440.t1 with length 206, pLDDT 78.4, pTM 0.714 in 4.0s. 1 / 1 completed.
+24/08/15 00:28:22 | INFO | root | Predicted structure for g8246.t1 with length 129, pLDDT 63.3, pTM 0.558 in 2.0s. 1 / 1 completed.
+24/08/15 00:28:32 | INFO | root | Predicted structure for g1760.t1 with length 414, pLDDT 83.8, pTM 0.839 in 20.1s. 1 / 1 completed.
+24/08/15 00:28:40 | INFO | root | Predicted structure for g1303.t1 with length 241, pLDDT 53.2, pTM 0.212 in 5.5s. 1 / 1 completed.
+24/08/15 00:28:44 | INFO | root | Predicted structure for g8216.t1 with length 104, pLDDT 32.6, pTM 0.192 in 1.4s. 1 / 1 completed.
+24/08/15 00:29:06 | INFO | root | Starting Predictions
+24/08/15 00:29:22 | INFO | root | Predicted structure for g7212.t1 with length 184, pLDDT 76.3, pTM 0.717 in 3.3s. 1 / 1 completed.
+24/08/15 00:29:26 | INFO | root | Predicted structure for g6910.t1 with length 167, pLDDT 62.7, pTM 0.487 in 2.8s. 1 / 1 completed.
+24/08/15 00:29:29 | INFO | root | Predicted structure for g8789.t2 with length 212, pLDDT 94.2, pTM 0.955 in 4.3s. 1 / 1 completed.
+24/08/15 00:29:48 | INFO | root | Predicted structure for g916.t1 with length 78, pLDDT 48.1, pTM 0.235 in 1.3s. 1 / 1 completed.
+24/08/15 00:30:14 | INFO | root | Predicted structure for g5231.t1 with length 114, pLDDT 44.7, pTM 0.236 in 1.6s. 1 / 1 completed.
+24/08/15 00:30:17 | INFO | root | Predicted structure for g3095.t1 with length 300, pLDDT 78.9, pTM 0.706 in 9.0s. 1 / 1 completed.
+24/08/15 00:30:55 | INFO | root | Predicted structure for g8219.t1 with length 108, pLDDT 33.5, pTM 0.212 in 1.5s. 1 / 1 completed.
+24/08/15 00:31:03 | INFO | root | Predicted structure for g970.t1 with length 154, pLDDT 74.3, pTM 0.551 in 2.5s. 1 / 1 completed.
+24/08/15 00:31:39 | INFO | root | Predicted structure for g2535.t1 with length 42, pLDDT 59.0, pTM 0.291 in 1.2s. 1 / 1 completed.
+24/08/15 00:31:49 | INFO | root | Predicted structure for g2201.t1 with length 156, pLDDT 51.3, pTM 0.381 in 2.6s. 1 / 1 completed.
+24/08/15 00:32:01 | INFO | root | Predicted structure for g8535.t1 with length 973, pLDDT 32.7, pTM 0.201 in 196.9s. 1 / 1 completed.
+24/08/15 00:32:27 | INFO | root | Predicted structure for g8652.t1 with length 799, pLDDT 76.6, pTM 0.392 in 117.4s. 1 / 1 completed.
+24/08/15 00:32:33 | INFO | root | Predicted structure for g1187.t1 with length 141, pLDDT 39.8, pTM 0.103 in 2.2s. 1 / 1 completed.
+24/08/15 00:33:11 | INFO | root | Predicted structure for g2879.t1 with length 26, pLDDT 56.1, pTM 0.106 in 1.2s. 1 / 1 completed.
+24/08/15 00:33:56 | INFO | root | Predicted structure for g216.t1 with length 137, pLDDT 42.0, pTM 0.154 in 2.1s. 1 / 1 completed.
