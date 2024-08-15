@@ -1,5 +1,6 @@
 from collections import Counter
 import contextlib
+import os.path
 import re
 
 from gffutils.exceptions import FeatureNotFoundError
@@ -8,6 +9,7 @@ from tqdm import tqdm
 
 from reannotation.utils import extract_accessions_from_transcript
 from reannotation.statistics import fisher_exact_for_two_lists_of_accessions
+from utils.generic import makedirs
 
 MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
@@ -215,3 +217,22 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
         else:
             genuine_split[k] = v
     return genuine_merged, genuine_split
+
+
+def novel_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list):
+    out_dir = "data/novel_orthologue_sequences/"
+    makedirs(out_dir)
+    count = 0
+    tool_species = species_list.get_species_with_data_label(tool_col)
+    for _, row in tqdm(hog_df.iterrows(), total=len(hog_df)):
+        if not row[tool_col] is np.nan and row[wbps_col] is np.nan:
+            count += 1
+            # Selecting just the first orthologue for simplicity
+            tool_id = list(map(str.strip, row[tool_col].split(",")))[0]
+            try:
+                tool_transcript = tool_species.db[tool_id.split("transcript_")[-1]]
+            except FeatureNotFoundError:
+                tool_transcript = tool_species.db["transcript:" + tool_id.split("transcript_")[-1]]
+            with open(os.path.join(out_dir, tool_id + ".fa"), 'a') as f:
+                f.write(">" + tool_transcript.id + "\n")
+                f.write(tool_species.get_protein_sequence(tool_transcript.id))
