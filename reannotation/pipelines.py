@@ -13,14 +13,15 @@ MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
 
 
-def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
+def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col, min_freq=5):
     # InterPro accessions from all mRNA features in WBPS annotation.
     acc_product = {}
     acc_list1 = []
     for tran in db.all_features(featuretype="mRNA"):
-        for acc, prod in extract_accessions_from_transcript(tran):
-            acc_product[acc] = prod
-            acc_list1.append(acc)
+        with contextlib.redirect_stdout(None):
+            for acc, prod in extract_accessions_from_transcript(tran):
+                acc_product[acc] = prod
+                acc_list1.append(acc)
 
     tool_only = set()
     wbps_only = set()
@@ -33,7 +34,8 @@ def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
                 wbps_only.add(tid)
                 tran = db["transcript:" + tid]
-                acc_list3.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+                with contextlib.redirect_stdout(None):
+                    acc_list3.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
             tool_only.update(p.strip() for p in row[tool_col].split(","))
         else:
@@ -42,22 +44,42 @@ def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
     # Full WBPS accession list with acc_list3 removed
     acc_list1a = list((Counter(acc_list1) - Counter(acc_list3)).elements())
 
-    # Most common InterPro accessions in WBPS gene missed by annotation tool
-    l3_more_expressed, l3_evenly_expressed, l3_less_expressed = fisher_exact_for_two_lists_of_accessions(acc_list1a, acc_list3)
-    for acc, freq in Counter(acc_list3).most_common():
-        try:
-            if acc in l3_more_expressed:
-                print(f"{acc}: {freq} - significantly more frequent ({l3_more_expressed[acc]}) - {acc_product[acc]}")
-            elif acc in l3_less_expressed:
-                print(f"{acc}: {freq} - significantly less frequent ({l3_less_expressed[acc]}) - {acc_product[acc]}")
-            else:
-                print(f"{acc}: {freq} - occurring as expected ({l3_evenly_expressed[acc]}) - {acc_product[acc]}")
-        except KeyError:
-            pass
+    # Find InterPro accessions occurring with significantly different frequency than in control (acc_list1a)
+    l3_more_frequent, l3_as_expected, l3_less_frequent, l3_only = fisher_exact_for_two_lists_of_accessions(acc_list3, acc_list1a)
 
-    # Filter accessions with high frequency and low test statistic.
-    filt = [k for k, v in Counter(acc_list3).items() if v >= 10]
-    filt = [k for k, v in l3_more_expressed.items() if v < 0.1 and k in filt]
+    print("InterPro accessions that are completely missing from control, with high frequency in test:")
+    for acc, freq in Counter(acc_list3).most_common():
+        if acc in l3_only:
+            if freq >= min_freq:
+                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
+    print()
+
+    # InterPro accessions missed by automated tool, sorted by greatest odds ratio
+    print("InterPro accessions occurring with significantly higher frequency than in control:")
+    for acc, stat in sorted(l3_more_frequent.items(), key=lambda x: x[1], reverse=True):
+        freq = Counter(acc_list3)[acc]
+        if freq >= min_freq:
+            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+    print()
+
+    print("InterPro accessions occurring as expected with high frequency:")
+    for acc, stat in l3_as_expected.items():
+        if stat < 1.5 and stat >= 0.5:
+            freq = Counter(acc_list3)[acc]
+            if freq >= min_freq:
+                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
+    print()
+
+    print("InterPro accessions occurring less frequently than expected:")
+    for acc, stat in l3_less_frequent.items():
+        freq = Counter(acc_list3)[acc]
+        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+    print()
+
+
+    # Filter accessions with high frequency and high test statistic [print out is easy to copy/paste for Artemis].
+    filt = [acc for acc, freq in Counter(acc_list3).items() if freq >= min_freq]
+    filt = [acc for acc, stat in l3_more_frequent.items() if stat > 5 and acc in filt]
 
     for tran in db.all_features(featuretype="mRNA"):
         if tran.id.strip("transcript:") in wbps_only:
@@ -67,9 +89,9 @@ def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col):
                 print(f"{tran.seqid} - {tran.id.strip('transcript:')} - {tran_filt_accs}")
 
     return {
-        "l3_more_expressed": l3_more_expressed,
-        "l3_evenly_expressed": l3_evenly_expressed,
-        "l3_less_expressed": l3_less_expressed,
+        "l3_more_frequent": l3_more_frequent,
+        "l3_as_expected": l3_as_expected,
+        "l3_less_frequent": l3_less_frequent,
         "acc_list3": acc_list3,
         "acc_product": acc_product,
     }
