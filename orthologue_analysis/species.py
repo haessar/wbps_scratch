@@ -90,7 +90,7 @@ class Species(ABC):
         self.db = init_db(self.gff_path, self.db_path)
         self.blast_slice = None
         self.prot_meta = ProteinMeta(
-            file_path=os.path.join(self.data_dir, "." + self.data_label + prot_filename_suffix),
+            file_path=os.path.join(self.data_dir, self.data_label + prot_filename_suffix),
             filename_suffix=prot_filename_suffix,
             label=self.data_label + ".".join(prot_filename_suffix.split(".")[:-1])
         )
