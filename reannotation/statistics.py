@@ -24,4 +24,9 @@ def fisher_exact_for_two_lists_of_accessions(l1, l2):
                 less_frequent[acc] = res.statistic
         else:
             no_significant_difference[acc] = res.statistic
-    return more_frequent, no_significant_difference, less_frequent, not_occurring
+    return {
+        "more_frequent": more_frequent, 
+        "as_expected": no_significant_difference,
+        "less_frequent": less_frequent,
+        "not_occurring": not_occurring
+    }
