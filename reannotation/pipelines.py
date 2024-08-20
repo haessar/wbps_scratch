@@ -1,5 +1,6 @@
 from collections import Counter
 import contextlib
+import os
 import os.path
 import re
 
@@ -7,96 +8,53 @@ from gffutils.exceptions import FeatureNotFoundError
 import numpy as np
 from tqdm import tqdm
 
-from reannotation.utils import extract_accessions_from_transcript
-from reannotation.statistics import fisher_exact_for_two_lists_of_accessions
+from reannotation.utils import extract_accessions_from_transcript, extract_accessions_from_tsv
 from utils.generic import makedirs
 
 MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
 
 
-def interpro_accession_pipeline(db, hog_df, wbps_col, tool_col, min_freq=5):
+def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir):
     # InterPro accessions from all mRNA features in WBPS annotation.
     acc_product = {}
-    acc_list1 = []
-    for tran in db.all_features(featuretype="mRNA"):
+    for tran in wbps_db.all_features(featuretype="mRNA"):
         with contextlib.redirect_stdout(None):
             for acc, prod in extract_accessions_from_transcript(tran):
                 acc_product[acc] = prod
-                acc_list1.append(acc)
 
-    tool_only = set()
-    wbps_only = set()
+    novel_transcripts = set()
+    missed_transcripts = set()
     shared_orth = {}
-    acc_list3 = []
+    acc_tally_novel = []
+    acc_tally_missed = []
+    acc_tally_shared = []
     for _, row in hog_df.iterrows():
         if all(row[[tool_col, wbps_col]].isna()):
             continue
         if row[tool_col] is np.nan and not row[wbps_col] is np.nan:
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
-                wbps_only.add(tid)
-                tran = db["transcript:" + tid]
+                missed_transcripts.add(tid)
+                tran = wbps_db["transcript:" + tid]
                 with contextlib.redirect_stdout(None):
-                    acc_list3.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+                    acc_tally_missed.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
-            tool_only.update(p.strip() for p in row[tool_col].split(","))
+            novel_transcripts.update(p.strip() for p in row[tool_col].split(","))
+            for t in row[tool_col].split(","):
+                tsv_path = os.path.join(interproscan_dir, t + ".fa.tsv")
+                if os.path.isfile(tsv_path) and os.stat(tsv_path).st_size != 0:
+                    for acc, desc in extract_accessions_from_tsv(tsv_path):
+                        acc_tally_novel.append(acc)
+                        if acc not in acc_product:
+                            acc_product[acc] = desc
         else:
             shared_orth[row[tool_col]] = row[wbps_col]
+            for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
+                tran = wbps_db["transcript:" + tid]
+                with contextlib.redirect_stdout(None):
+                    acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
 
-    # Full WBPS accession list with acc_list3 removed
-    acc_list1a = list((Counter(acc_list1) - Counter(acc_list3)).elements())
-
-    # Find InterPro accessions occurring with significantly different frequency than in control (acc_list1a)
-    l3_more_frequent, l3_as_expected, l3_less_frequent, l3_only = fisher_exact_for_two_lists_of_accessions(acc_list3, acc_list1a)
-
-    print("InterPro accessions that are completely missing from control, with high frequency in test:")
-    for acc, freq in Counter(acc_list3).most_common():
-        if acc in l3_only:
-            if freq >= min_freq:
-                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
-    print()
-
-    # InterPro accessions missed by automated tool, sorted by greatest odds ratio
-    print("InterPro accessions occurring with significantly higher frequency than in control:")
-    for acc, stat in sorted(l3_more_frequent.items(), key=lambda x: x[1], reverse=True):
-        freq = Counter(acc_list3)[acc]
-        if freq >= min_freq:
-            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
-    print()
-
-    print("InterPro accessions occurring as expected with high frequency:")
-    for acc, stat in l3_as_expected.items():
-        if stat < 1.5 and stat >= 0.5:
-            freq = Counter(acc_list3)[acc]
-            if freq >= min_freq:
-                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
-    print()
-
-    print("InterPro accessions occurring less frequently than expected:")
-    for acc, stat in l3_less_frequent.items():
-        freq = Counter(acc_list3)[acc]
-        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
-    print()
-
-
-    # Filter accessions with high frequency and high test statistic [print out is easy to copy/paste for Artemis].
-    filt = [acc for acc, freq in Counter(acc_list3).items() if freq >= min_freq]
-    filt = [acc for acc, stat in l3_more_frequent.items() if stat > 5 and acc in filt]
-
-    for tran in db.all_features(featuretype="mRNA"):
-        if tran.id.strip("transcript:") in wbps_only:
-            with contextlib.redirect_stdout(None):
-                tran_filt_accs = set(acc for acc, _ in extract_accessions_from_transcript(tran) if acc in filt)
-            if tran_filt_accs:
-                print(f"{tran.seqid} - {tran.id.strip('transcript:')} - {tran_filt_accs}")
-
-    return {
-        "l3_more_frequent": l3_more_frequent,
-        "l3_as_expected": l3_as_expected,
-        "l3_less_frequent": l3_less_frequent,
-        "acc_list3": acc_list3,
-        "acc_product": acc_product,
-    }
+    return acc_product, acc_tally_shared, acc_tally_missed, acc_tally_novel, missed_transcripts
 
 
 def count_prod_word_occurrence_for_signif_accs(acc_sig_diff_iter, acc_all_occ_iter, acc_product_dict):
