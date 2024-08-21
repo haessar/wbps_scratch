@@ -32,6 +32,6 @@ if __name__ == "__main__":
         for c in db.children(longest_transcript):
             if c.featuretype == "CDS":
                 # Some CDS have multiple parent transcripts, which throws an error during translation of proteins with genometools
-                if c.attributes.get("Parent") > 1:
+                if len(c.attributes.get("Parent", [])) > 1:
                     c["Parent"] = [longest_transcript.id]
             print(c)
