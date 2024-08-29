@@ -25,7 +25,10 @@ def read_pdb(pdbcode, pdbfilenm):
 
 
 def parse_af(afid):
-    return afid.split('-')[1]
+    try:
+        return afid.split('-')[1]
+    except IndexError:
+        return afid
 
 
 CONFIDENT = 70
@@ -39,8 +42,13 @@ if __name__ == "__main__":
             struct = read_pdb(parse_af(pdb), os.path.join(batchdir, pdb))
             for res in struct.get_residues():
                 pLDDT = set(a.bfactor for a in res.child_list)
-                assert len(pLDDT) == 1
-                all_plDDT.append(pLDDT.pop())
+                try:
+                    assert len(pLDDT) == 1
+                    all_plDDT.append(pLDDT.pop())
+                # Take median pLDDT for a residue if each atom has a different score
+                except AssertionError:
+                    pLDDT = list(a.bfactor for a in res.child_list)
+                    all_plDDT.append(median(pLDDT))                
             perc_confident = 100 * len([p for p in all_plDDT if p >= CONFIDENT]) / len(all_plDDT)
             print(",".join((
                 pdb,
