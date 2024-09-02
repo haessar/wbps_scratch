@@ -4,7 +4,27 @@ import contextlib
 from reannotation.utils import extract_accessions_from_transcript
 
 
-def interpro_accessions_frequently_missed_by_all_tools(acc_product, tools_missed_results, acc_tally_missed_tools):
+def interpro_accessions_frequently_missed_by_all_tools(acc_product, acc_tally, test_results):
+    # InterPro accessions from transcripts missed by all tools, sorted by greatest odds ratio
+    print("InterPro accessions occurring with significantly higher frequency in transcripts that were missed by all tools, than in transcripts shared by at least 1 tool:")
+    for acc, stat in sorted(test_results["more_frequent"].items(), key=lambda x: x[1], reverse=True):
+        freq = Counter(acc_tally)[acc]
+        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+    print()
+
+    print("InterPro accessions that are completely missing from transcripts shared by at least 1 tool, but present in transcripts that were missed by all tools:")
+    for acc, freq in Counter(acc_tally).most_common():
+        if acc in test_results["not_occurring"]:
+            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
+    print()
+
+    print("InterPro accessions occurring as expected in transcripts that were missed by all tools.")
+    for acc, stat in sorted(test_results["as_expected"].items(), key=lambda x: x[1], reverse=True):
+        freq = Counter(acc_tally)[acc]
+        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+
+
+def interpro_accessions_frequently_missed_by_each_tool(acc_product, tools_missed_results, acc_tally_missed_tools):
     for acc in set.intersection(*[set(results["more_frequent"].keys()) for results in tools_missed_results.values()]):
         print(f"{acc}: {acc_product[acc]}")
         for tool in tools_missed_results.keys():
