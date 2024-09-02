@@ -90,7 +90,7 @@ def count_prod_word_occurrence_for_signif_accs(acc_sig_diff_iter, acc_all_occ_it
     print(Counter(words).most_common())
 
 
-def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, transcript2, prefix):
+def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, transcript2, prefix):
     left_gene = right_gene = None
     left_genes = sorted(
         species1.db.region(
@@ -99,7 +99,7 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, t
             end=transcript1.end,
             strand=transcript1.strand, featuretype="gene"),
         key=lambda x: x.start, reverse=False)
-    left_genes = [g for g in left_genes if g not in list(species1.db.parents(prefix + ":" + id1, featuretype="gene"))]
+    left_genes = [g for g in left_genes if g not in list(species1.db.parents(transcript1, featuretype="gene"))]
     if len(left_genes) > 0:
         left_genes = [g for g in left_genes if any(c.featuretype == "mRNA" for c in species1.db.children(g))]
         if left_genes:
@@ -111,7 +111,7 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, t
             end=transcript1.end + MAX_GENE_DISTANCE,
             strand=transcript1.strand, featuretype="gene"),
         key=lambda x: x.end, reverse=False)
-    right_genes = [g for g in right_genes if g not in list(species1.db.parents(prefix + ":" + id1, featuretype="gene"))]
+    right_genes = [g for g in right_genes if g not in list(species1.db.parents(transcript1, featuretype="gene"))]
     if len(right_genes) > 0:
         right_genes = [g for g in right_genes if any(c.featuretype == "mRNA" for c in species1.db.children(g))]
         if right_genes:
@@ -163,10 +163,10 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
             tool_cds_exons = list(tool_species.db.children(tool_transcript, featuretype="CDS"))
             tool_prot_len = tool_species.get_amino_acid_count(tool_cds_exons)
             if len(wbps_cds_exons) != len(tool_cds_exons) or abs(1 - wbps_prot_len / tool_prot_len) > 0.1:
-                split_transcripts = find_adjacent_merged_genes(seq_id_map, wbps_species, wbps_transcript, wbps_blast, wbps_id, tool_transcript, wbps_prefix)
+                split_transcripts = find_adjacent_merged_genes(seq_id_map, wbps_species, wbps_transcript, wbps_blast, tool_transcript, wbps_prefix)
                 if split_transcripts:
                     split[tool_id] = split_transcripts
-                merged_transcripts = find_adjacent_merged_genes(seq_id_map, tool_species, tool_transcript, tool_blast, tool_id, wbps_transcript, tool_prefix)
+                merged_transcripts = find_adjacent_merged_genes(seq_id_map, tool_species, tool_transcript, tool_blast, wbps_transcript, tool_prefix)
                 if merged_transcripts:
                     merged[wbps_id] = merged_transcripts
 
