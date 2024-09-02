@@ -1,5 +1,6 @@
 *
 !.gitignore
 !.gitkeep
-!esm_pLDDTs_acc.txt
-!Sman_esm_pLDDTs_*.txt
+!*esm_pLDDTs_*.txt
+!pLDDT_*.csv
+pLDDT_stats*.csv
