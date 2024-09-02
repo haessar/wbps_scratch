@@ -15,9 +15,30 @@ MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
 
 
-def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir):
+def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
+    acc_tally_no_tool = []
+    acc_tally_one_plus_tool_shared = []
+    for _, row in hog_df.iterrows():
+        # WBPS transcripts without an orthologue with any tool
+        if not row[wbps_col] is np.nan and all(row[tool_col] is np.nan for tool_col in tool_cols):
+            for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
+                tran = wbps_db["transcript:" + tid]
+                with contextlib.redirect_stdout(None):
+                    acc_tally_no_tool.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+        # WBPS transcripts sharing at least one orthologue with an automated tool
+        elif not row[wbps_col] is np.nan and any(not row[tool_col] is np.nan for tool_col in tool_cols):
+            for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
+                tran = wbps_db["transcript:" + tid]
+                with contextlib.redirect_stdout(None):
+                    acc_tally_one_plus_tool_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+
+    return acc_tally_no_tool, acc_tally_one_plus_tool_shared
+
+
+def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir, acc_product=None, prefix="transcript"):
     # InterPro accessions from all mRNA features in WBPS annotation.
-    acc_product = {}
+    if acc_product is None:
+        acc_product = {}
     for tran in wbps_db.all_features(featuretype="mRNA"):
         with contextlib.redirect_stdout(None):
             for acc, prod in extract_accessions_from_transcript(tran):
@@ -33,9 +54,9 @@ def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interprosca
         if all(row[[tool_col, wbps_col]].isna()):
             continue
         if row[tool_col] is np.nan and not row[wbps_col] is np.nan:
-            for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
+            for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
                 missed_transcripts.add(tid)
-                tran = wbps_db["transcript:" + tid]
+                tran = wbps_db[prefix + ":" + tid]
                 with contextlib.redirect_stdout(None):
                     acc_tally_missed.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
@@ -49,8 +70,8 @@ def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interprosca
                             acc_product[acc] = desc
         else:
             shared_orth[row[tool_col]] = row[wbps_col]
-            for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
-                tran = wbps_db["transcript:" + tid]
+            for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
+                tran = wbps_db[prefix + ":" + tid]
                 with contextlib.redirect_stdout(None):
                     acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
 
@@ -69,7 +90,7 @@ def count_prod_word_occurrence_for_signif_accs(acc_sig_diff_iter, acc_all_occ_it
     print(Counter(words).most_common())
 
 
-def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, transcript2, id2):
+def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, transcript2, prefix):
     left_gene = right_gene = None
     left_genes = sorted(
         species1.db.region(
@@ -78,7 +99,7 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, t
             end=transcript1.end,
             strand=transcript1.strand, featuretype="gene"),
         key=lambda x: x.start, reverse=False)
-    left_genes = [g for g in left_genes if not id1.startswith(g.id.split("gene:")[-1] + ".")]
+    left_genes = [g for g in left_genes if g not in list(species1.db.parents(prefix + ":" + id1, featuretype="gene"))]
     if len(left_genes) > 0:
         left_genes = [g for g in left_genes if any(c.featuretype == "mRNA" for c in species1.db.children(g))]
         if left_genes:
@@ -90,7 +111,7 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, t
             end=transcript1.end + MAX_GENE_DISTANCE,
             strand=transcript1.strand, featuretype="gene"),
         key=lambda x: x.end, reverse=False)
-    right_genes = [g for g in right_genes if not id1.startswith(g.id.split("gene:")[-1] + ".")]
+    right_genes = [g for g in right_genes if g not in list(species1.db.parents(prefix + ":" + id1, featuretype="gene"))]
     if len(right_genes) > 0:
         right_genes = [g for g in right_genes if any(c.featuretype == "mRNA" for c in species1.db.children(g))]
         if right_genes:
@@ -116,11 +137,11 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, id1, t
                     if not right_gene.start - transcript2.end <= 0:
                         good_right = True
                 if any([good_left, good_right]):
-                    return list(map(lambda x: x.split("transcript:")[-1], list(map(seq_id_map.get, tool_col_slice.transcript_id.to_list())) + [transcript1.id]))
+                    return list(map(lambda x: x.split(prefix + ":")[-1], list(map(seq_id_map.get, tool_col_slice.transcript_id.to_list())) + [transcript1.id]))
     return []
 
 
-def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq_id_map):
+def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq_id_map, wbps_prefix="transcript", tool_prefix="transcript"):
     split = {}
     merged = {}
     tool_species = species_list.get_species_with_data_label(tool_col)
@@ -130,22 +151,22 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
     for _, row in tqdm(hog_df.iterrows(), total=len(hog_df)):
         if not row[tool_col] is np.nan and not row[wbps_col] is np.nan:
             # Selecting just the first orthologue for simplicity
-            wbps_id = list(map(str.strip, row[wbps_col].split(",")))[0].split("transcript_")[1]
+            wbps_id = list(map(str.strip, row[wbps_col].split(",")))[0].split(wbps_prefix + "_")[1]
             tool_id = list(map(str.strip, row[tool_col].split(",")))[0]
-            wbps_transcript = wbps_species.db["transcript:" + wbps_id]
+            wbps_transcript = wbps_species.db[wbps_prefix + ":" + wbps_id]
             wbps_cds_exons = list(wbps_species.db.children(wbps_transcript, featuretype="CDS"))
             wbps_prot_len = wbps_species.get_amino_acid_count(wbps_cds_exons)
             try:
-                tool_transcript = tool_species.db[tool_id.split("transcript_")[-1]]
+                tool_transcript = tool_species.db[tool_id.split(tool_prefix + "_")[-1]]
             except FeatureNotFoundError:
-                tool_transcript = tool_species.db["transcript:" + tool_id.split("transcript_")[-1]]
+                tool_transcript = tool_species.db[tool_prefix + ":" + tool_id.split(tool_prefix + "_")[-1]]
             tool_cds_exons = list(tool_species.db.children(tool_transcript, featuretype="CDS"))
             tool_prot_len = tool_species.get_amino_acid_count(tool_cds_exons)
             if len(wbps_cds_exons) != len(tool_cds_exons) or abs(1 - wbps_prot_len / tool_prot_len) > 0.1:
-                split_transcripts = find_adjacent_merged_genes(seq_id_map, wbps_species, wbps_transcript, wbps_blast, wbps_id, tool_transcript, tool_id)
+                split_transcripts = find_adjacent_merged_genes(seq_id_map, wbps_species, wbps_transcript, wbps_blast, wbps_id, tool_transcript, wbps_prefix)
                 if split_transcripts:
                     split[tool_id] = split_transcripts
-                merged_transcripts = find_adjacent_merged_genes(seq_id_map, tool_species, tool_transcript, tool_blast, tool_id, wbps_transcript, wbps_id)
+                merged_transcripts = find_adjacent_merged_genes(seq_id_map, tool_species, tool_transcript, tool_blast, tool_id, wbps_transcript, tool_prefix)
                 if merged_transcripts:
                     merged[wbps_id] = merged_transcripts
 
@@ -156,11 +177,11 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
         try:
             t1_range = range(tool_species.db[v[0]].start, tool_species.db[v[0]].end)
         except FeatureNotFoundError:
-            t1_range = range(tool_species.db["transcript:" + v[0]].start, tool_species.db["transcript:" + v[0]].end)
+            t1_range = range(tool_species.db[tool_prefix + ":" + v[0]].start, tool_species.db[tool_prefix + ":" + v[0]].end)
         try:
             t2_range = range(tool_species.db[v[1]].start, tool_species.db[v[1]].end)
         except FeatureNotFoundError:
-            t2_range = range(tool_species.db["transcript:" + v[1]].start, tool_species.db["transcript:" + v[1]].end)
+            t2_range = range(tool_species.db[tool_prefix + ":" + v[1]].start, tool_species.db[tool_prefix + ":" + v[1]].end)
         if set(t1_range).issubset(t2_range) or set(t2_range).issubset(t1_range):
             subset_count += 1
         else:
@@ -168,8 +189,12 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
     subset_count = 0
     genuine_split = {}
     for k, v in split.items():
-        t1_range = range(wbps_species.db["transcript:" + v[0]].start, wbps_species.db["transcript:" + v[0]].end)
-        t2_range = range(wbps_species.db["transcript:" + v[1]].start, wbps_species.db["transcript:" + v[1]].end)
+        try:
+            t1_range = range(wbps_species.db[wbps_prefix + ":" + v[0]].start, wbps_species.db[wbps_prefix + ":" + v[0]].end)
+            t2_range = range(wbps_species.db[wbps_prefix + ":" + v[1]].start, wbps_species.db[wbps_prefix + ":" + v[1]].end)
+        except FeatureNotFoundError:
+            t1_range = range(wbps_species.db[v[0]].start, wbps_species.db[v[0]].end)
+            t2_range = range(wbps_species.db[v[1]].start, wbps_species.db[v[1]].end)
         if set(t1_range).issubset(t2_range) or set(t2_range).issubset(t1_range):
             subset_count += 1
         else:
@@ -177,8 +202,7 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
     return genuine_merged, genuine_split
 
 
-def novel_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list):
-    out_dir = "data/novel_orthologue_sequences/"
+def novel_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, out_dir="data/novel_orthologue_sequences/"):
     makedirs(out_dir)
     count = 0
     tool_species = species_list.get_species_with_data_label(tool_col)
