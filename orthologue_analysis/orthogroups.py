@@ -100,6 +100,8 @@ class Plotter:
                 self.skip = True
             else:
                 self.skip = False
+        else:
+            self.skip = True
         return self
 
     def __exit__(self, *args, **kwargs):
