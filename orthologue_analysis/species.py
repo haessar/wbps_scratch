@@ -46,7 +46,7 @@ class SpeciesList(UserList):
             if sp.clade == clade:
                 species_ids.add(str(sp.id))
         return tuple(species_ids)
-    
+
     def get_species_with_data_label(self, data_label):
         for sp in self:
             if sp.data_label == data_label:
@@ -178,12 +178,24 @@ class HaematobiumClade(Schistosoma):
     clade = 1
 
 
+class HaematobiumCladeFromTool(AltSourceMixin, HaematobiumClade):
+    pass
+
+
 class MansoniClade(Schistosoma):
     clade = 2
 
 
+class MansoniCladeFromTool(AltSourceMixin, MansoniClade):
+    pass
+
+
 class JaponicumClade(Schistosoma):
     clade = 3
+
+
+class JaponicumCladeFromTool(AltSourceMixin, JaponicumClade):
+    pass
 
 
 class IndicumClade(Schistosoma):
