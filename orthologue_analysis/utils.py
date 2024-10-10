@@ -16,7 +16,12 @@ class SequenceIDMapping:
     def __getitem__(self, item):
         if str(item)[0].isnumeric():
             return self.inv_map[item]
-        return self.map[item]
+        prefixes = ["", "transcript:", "transcript_"]
+        while True:
+            try:
+                return self.map[prefixes[0] + item]
+            except KeyError:
+                prefixes.pop(0)
 
     def get(self, item):
         return self[item]

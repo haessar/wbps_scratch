@@ -81,11 +81,12 @@ class Plotter:
                 writer.writerow(tsvdata)
 
     def bed_track_config(self, species, transcript):
+        tid = transcript.id.split('transcript:')[1] if transcript.id.startswith("transcript:") else transcript.id
         return {
             "file": self.tmp_bed_file_path(species.prefix.lower()),
             "type": "bed",
             "height": "3",
-            "title": f"{species.abbr} {species.name}: \n {transcript.id.split('transcript:')[1]}",
+            "title": f"{species.abbr} {species.name}: \n {tid}",
             "fontsize": 10,
             "file_type": "bed",
             "line_width": 1,
@@ -150,15 +151,25 @@ class OrthoGroup:
                 continue
             prot_ids = [p.strip() for p in prot_ids_string.split(",")]
             if prefix_cut:
-                prot_ids = list(map(lambda p: p.split(prefix_cut)[1], prot_ids))
+                to_cut = [tid for tid in prot_ids if tid.startswith(prefix_cut)]
+                if to_cut:
+                    to_leave = list(set(prot_ids).difference(to_cut))
+                    prot_ids = list(map(lambda p: p.split(prefix_cut)[1], prot_ids)) + to_leave
             transcript_ids = set(prot_ids)
             gene_ids = set(p.split(".")[0] for p in prot_ids)
             self.counts.transcript.append(len(transcript_ids))
             self.counts.gene.append(len(gene_ids))
-            other_prots_labels = [c for c in row.index if c.startswith(sp.genus) and c != sp.prot_meta.label]
+            other_prots_labels = row.index.intersection([s.prot_meta.label for s in self.species_list if s.prot_meta.label != sp.prot_meta.label]).to_list()
             other_transcript_ids = flatten_list_to_set(list(map(str.strip, p.split(", "))) for p in row.filter(items=other_prots_labels).to_list())
+            if prefix_cut:
+                to_cut = [tid for tid in other_transcript_ids if tid.startswith(prefix_cut)]
+                if to_cut:
+                    to_leave = list(other_transcript_ids.difference(to_cut))
+                    other_transcript_ids = list(map(lambda p: p.split(prefix_cut)[1], to_cut)) + to_leave
+                else:
+                    other_transcript_ids = list(other_transcript_ids)
             transcript, exons = sp.select_transcript(transcript_ids, other_transcript_ids, self.seq_id_map, load_blast)
-            transcript_id = transcript.id.split(":")[1]
+            transcript_id = transcript.id.split(":")[1] if ":" in transcript.id else transcript.id
             self.selected_transcripts[sp] = transcript_id
             self.counts.clade_exons[sp.clade].append(len(exons))
             self.counts.prot_amino_acids[transcript_id] = sp.get_amino_acid_count(exons)

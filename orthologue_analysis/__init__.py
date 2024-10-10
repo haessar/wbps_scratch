@@ -73,7 +73,7 @@ def main(args, species_list):
                 table_cols=table_cols,
                 seq_id_map=SequenceIDMapping(args.wd_path)
             ) as og:
-                og.process(row, clade=args.clade, plotter=plotter, load_blast=args.load_blast)
+                og.process(row, plotter=plotter, **vars(args))
 
 
 def parse_args():

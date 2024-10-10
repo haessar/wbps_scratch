@@ -7,6 +7,7 @@ import os.path
 import re
 
 import dask.dataframe as dd
+from gffutils.exceptions import FeatureNotFoundError
 from natsort import natsorted
 import pysam
 from tqdm.dask import TqdmCallback
@@ -133,16 +134,16 @@ class Species(ABC):
     def _get_transcript_with_most_exons(self, transcript_ids):
         exon_counts = {}
         for tid in transcript_ids:
-            cds = list(self.db.children("transcript:" + tid, featuretype="CDS"))
-            exon_counts[len(cds)] = {self.db["transcript:" + tid]: cds}
+            cds = list(self.db.children(tid if tid.startswith("transcript:") else "transcript:" + tid, featuretype="CDS"))
+            exon_counts[len(cds)] = {self.db[tid if tid.startswith("transcript:") else "transcript:" + tid]: cds}
         for tran, exons in exon_counts[max(exon_counts)].items():
             return tran, sorted(exons, key=lambda x: x.start, reverse=tran.strand=="-")
 
     def _get_longest_transcript(self, transcript_ids):
         prot_lengths = {}
         for tid in transcript_ids:
-            cds = list(self.db.children("transcript:" + tid, featuretype="CDS"))
-            prot_lengths[self.get_amino_acid_count(cds)] = {self.db["transcript:" + tid]: cds}
+            cds = list(self.db.children(tid if tid.startswith("transcript:") else "transcript:" + tid, featuretype="CDS"))
+            prot_lengths[self.get_amino_acid_count(cds)] = {self.db[tid if tid.startswith("transcript:") else "transcript:" + tid]: cds}
         for tran, exons in prot_lengths[max(prot_lengths)].items():
             return tran, sorted(exons, key=lambda x: x.start, reverse=tran.strand=="-")
 
@@ -150,8 +151,11 @@ class Species(ABC):
         filt = self.blast_slice[(self.blast_slice["transcript_id"].isin(map(seq_id_map.get, transcript_ids))) &
                                 (self.blast_slice["other_transcript_id"].isin(map(seq_id_map.get, other_transcript_ids)))]
         tid = seq_id_map[filt.groupby("transcript_id").median(["pident", "bitscore"]).sort_values(["pident", "bitscore"], ascending=False).head(1).index[0]]
-        tran = self.db["transcript:" + tid]
-        exons = list(self.db.children("transcript:" + tid, featuretype="CDS"))
+        try:
+            tran = self.db[tid]
+        except FeatureNotFoundError:
+            tran = self.db[tid if tid.startswith("transcript:") else "transcript:" + tid]
+        exons = list(self.db.children(tid if tid.startswith("transcript:") else "transcript:" + tid, featuretype="CDS"))
         return tran, sorted(exons, key=lambda x: x.start, reverse=tran.strand=="-")
 
     def get_protein_sequence(self, tid):
