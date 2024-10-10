@@ -83,7 +83,7 @@ class Species(ABC):
     release = WBPS_RELEASE
     default_transcript_selection_method = "_get_longest_transcript"
 
-    def __init__(self, name, acc="", prot_filename_suffix=".protein.fa", data_label=None):
+    def __init__(self, name, acc="", prot_filename_suffix=".protein.fa", data_label=None, skip_plot=False):
         self.name = name
         self.prefix = self.abbr + self.name.lower()[:3]
         self.data_label = f"{self.genus}_{self.name}.{acc}.{self.release}" if not data_label else data_label
@@ -94,7 +94,8 @@ class Species(ABC):
             filename_suffix=prot_filename_suffix,
             label=self.data_label + ".".join(prot_filename_suffix.split(".")[:-1])
         )
- 
+        self.skip_plot = skip_plot
+
     @property
     def gff_path(self):
         return os.path.join(self.data_dir, ".".join((self.data_label, "annotations", "gff3")))
