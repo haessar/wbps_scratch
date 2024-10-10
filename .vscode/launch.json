@@ -50,6 +50,24 @@
             ]
         },
         {
+            "name": "Python Debugger: schisto_orthogroup_pipeline_8_LT.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "schisto_orthogroup_pipeline_8_LT.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "data/from_MARS/OrthoFinder/Phylogenetic_Hierarchical_Orthogroups/Results_Jul22/",
+                "--hog", "N0.HOG0007316",
+                "--do-plot",
+                "--overwrite-plot",
+                "--load-blast",
+                "--global-ident", "infer",
+                // "--resume", "/home/will/wbp_scratch/data/schistosome_orthogroups/Results_Jul22/table_2024_10_09_16_28_50.tsv"
+                // "--clade", "1"
+            ]
+        },
+        {
             "name": "Python Debugger: find_biologically_interesting_genes.py",
             "type": "debugpy",
             "request": "launch",
