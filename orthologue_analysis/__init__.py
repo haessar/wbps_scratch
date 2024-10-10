@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from utils.generic import makedirs
 from .orthogroups import format_output_table_path, init_orthogroup_df, OrthoGroup, Plotter
-from .utils import SequenceIDMapping
+from .utils import SequenceIDMapping, orthofinder_paths
 
 
 class OrthologueAnalysisResumeError(Exception):
@@ -92,7 +92,11 @@ def parse_args():
     parser.add_argument('--global-ident', '-g', choices=[None, 'needle', 'infer'], default=None)
     parser.add_argument('--clade', type=int, default=None)
     args = parser.parse_args()
-    args.hog_path = os.path.join(args.of_out_dir, "Phylogenetic_Hierarchical_Orthogroups", "N0.tsv")
-    args.wd_path = os.path.join(args.of_out_dir, "WorkingDirectory", "")
     args.results_label = os.path.basename(os.path.normpath(args.of_out_dir))
+    if os.path.exists(os.path.join(args.of_out_dir, "N0.tsv")):
+        args.hog_path = os.path.join(args.of_out_dir, "N0.tsv")
+        args.wd_path = orthofinder_paths(args.results_label)["wd"]
+    else:
+        args.hog_path = os.path.join(args.of_out_dir, "Phylogenetic_Hierarchical_Orthogroups", "N0.tsv")
+        args.wd_path = os.path.join(args.of_out_dir, "WorkingDirectory", "")
     return args
