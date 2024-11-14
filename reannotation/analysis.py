@@ -8,20 +8,22 @@ def interpro_accessions_frequently_missed_by_all_tools(acc_product, acc_tally, t
     # InterPro accessions from transcripts missed by all tools, sorted by greatest odds ratio
     print("InterPro accessions occurring with significantly higher frequency in transcripts that were missed by all tools, than in transcripts shared by at least 1 tool:")
     for acc, stat in sorted(test_results["more_frequent"].items(), key=lambda x: x[1], reverse=True):
-        freq = Counter(acc_tally)[acc]
-        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+        if acc in acc_product:
+            freq = Counter(acc_tally)[acc]
+            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
     print()
 
     print("InterPro accessions that are completely missing from transcripts shared by at least 1 tool, but present in transcripts that were missed by all tools:")
     for acc, freq in Counter(acc_tally).most_common():
-        if acc in test_results["not_occurring"]:
+        if acc in test_results["not_occurring"] and acc in acc_product:
             print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
     print()
 
     print("InterPro accessions occurring as expected in transcripts that were missed by all tools.")
     for acc, stat in sorted(test_results["as_expected"].items(), key=lambda x: x[1], reverse=True):
-        freq = Counter(acc_tally)[acc]
-        print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+        if acc in acc_product:
+            freq = Counter(acc_tally)[acc]
+            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
 
 
 def interpro_accessions_frequently_missed_by_each_tool(acc_product, tools_missed_results, acc_tally_missed_tools):
@@ -39,16 +41,20 @@ def interpro_accessions_in_novel_transcripts(acc_product, acc_tally, test_result
     # InterPro accessions from novel transcripts, sorted by greatest odds ratio
     print("InterPro accessions occurring with significantly higher frequency in novel transcripts than in shared transcripts:")
     for acc, stat in sorted(test_results["more_frequent"].items(), key=lambda x: x[1], reverse=True):
-        freq = Counter(acc_tally)[acc]
-        if freq >= min_freq:
-            print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+        if acc in acc_product:
+            freq = Counter(acc_tally)[acc]
+            if freq >= min_freq:
+                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences, {round(freq/stat)} expected)")
+                yield acc
     print()
 
     print("InterPro accessions that are completely missing from shared transcripts, with high frequency in novel transcripts:")
     for acc, freq in Counter(acc_tally).most_common():
-        if acc in test_results["not_occurring"]:
-            if freq >= min_freq:
-                print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
+        if acc in acc_product:
+            if acc in test_results["not_occurring"]:
+                if freq >= min_freq:
+                    print(f"\t{acc}: {acc_product[acc]} ({freq} occurrences)")
+                    yield acc
     print()
 
 
