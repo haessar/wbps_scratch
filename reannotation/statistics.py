@@ -1,6 +1,9 @@
 from collections import Counter
+import os
+import os.path
 
 from scipy.stats import fisher_exact
+from .utils import extract_accessions_from_tsv
 
 
 def fisher_exact_for_two_lists_of_accessions(l1, l2):
@@ -30,3 +33,17 @@ def fisher_exact_for_two_lists_of_accessions(l1, l2):
         "less_frequent": less_frequent,
         "not_occurring": not_occurring
     }
+
+
+def count_transcripts_with_accession(accession, prefix, interproscan_dir):
+    count = 0
+    unique = set()
+    for tsv in os.listdir(interproscan_dir):
+        tsv_path = os.path.join(interproscan_dir, tsv)
+        if os.stat(tsv_path).st_size != 0 and tsv.startswith(prefix):
+            for acc, _ in extract_accessions_from_tsv(tsv_path):
+                if acc == accession:
+                    count += 1
+                    unique.add(tsv)
+                    break
+    return count, unique
