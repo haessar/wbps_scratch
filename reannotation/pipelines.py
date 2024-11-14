@@ -23,27 +23,14 @@ def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
         if not row[wbps_col] is np.nan and all(row[tool_col] is np.nan for tool_col in tool_cols):
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
                 tran = wbps_db["transcript:" + tid]
-                with contextlib.redirect_stdout(None):
-                    acc_tally_no_tool.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+                # with contextlib.redirect_stdout(None):
+                acc_tally_no_tool.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         # WBPS transcripts sharing at least one orthologue with an automated tool
         elif not row[wbps_col] is np.nan and any(not row[tool_col] is np.nan for tool_col in tool_cols):
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
                 tran = wbps_db["transcript:" + tid]
-                with contextlib.redirect_stdout(None):
-                    acc_tally_one_plus_tool_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
-
-    return acc_tally_no_tool, acc_tally_one_plus_tool_shared
-
-
-def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir, acc_product=None, prefix="transcript"):
-    # InterPro accessions from all mRNA features in WBPS annotation.
-    if acc_product is None:
-        acc_product = {}
-    for tran in wbps_db.all_features(featuretype="mRNA"):
-        with contextlib.redirect_stdout(None):
-            for acc, prod in extract_accessions_from_transcript(tran):
-                acc_product[acc] = prod
-
+                # with contextlib.redirect_stdout(None):
+                acc_tally_one_plus_tool_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
     novel_transcripts = set()
     missed_transcripts = set()
     shared_orth = {}
@@ -57,8 +44,8 @@ def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interprosca
             for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
                 missed_transcripts.add(tid)
                 tran = wbps_db[prefix + ":" + tid]
-                with contextlib.redirect_stdout(None):
-                    acc_tally_missed.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+                # with contextlib.redirect_stdout(None):
+                acc_tally_missed.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
             novel_transcripts.update(p.strip() for p in row[tool_col].split(","))
             for t in row[tool_col].split(","):
@@ -72,8 +59,8 @@ def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interprosca
             shared_orth[row[tool_col]] = row[wbps_col]
             for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
                 tran = wbps_db[prefix + ":" + tid]
-                with contextlib.redirect_stdout(None):
-                    acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+                # with contextlib.redirect_stdout(None):
+                acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
 
     return acc_product, acc_tally_shared, acc_tally_missed, acc_tally_novel, missed_transcripts
 

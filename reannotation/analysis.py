@@ -94,7 +94,7 @@ def missed_transcripts_with_significantly_more_frequent_accessions(db, missed_tr
 
     for tran in db.all_features(featuretype="mRNA"):
         if tran.id.strip("transcript:") in missed_transcripts:
-            with contextlib.redirect_stdout(None):
-                tran_filt_accs = set(acc for acc, _ in extract_accessions_from_transcript(tran) if acc in filt)
+            # with contextlib.redirect_stdout(None):
+            tran_filt_accs = set(acc for acc, _ in extract_accessions_from_transcript(tran) if acc in filt)
             if tran_filt_accs:
                 print(f"{tran.seqid} - {tran.id.strip('transcript:')} - {tran_filt_accs}")
