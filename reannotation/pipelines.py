@@ -1,5 +1,5 @@
 from collections import Counter
-import contextlib
+# import contextlib
 import os
 import os.path
 import re
@@ -15,9 +15,10 @@ MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
 
 
-def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
+def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols, interproscan_dir):
     acc_tally_no_tool = []
     acc_tally_one_plus_tool_shared = []
+    acc_tally_one_plus_tool_novel = []
     for _, row in hog_df.iterrows():
         # WBPS transcripts without an orthologue with any tool
         if not row[wbps_col] is np.nan and all(row[tool_col] is np.nan for tool_col in tool_cols):
@@ -31,6 +32,21 @@ def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
                 tran = wbps_db["transcript:" + tid]
                 # with contextlib.redirect_stdout(None):
                 acc_tally_one_plus_tool_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+        # Novel transcripts from any automated tool
+        elif row[wbps_col] is np.nan and any(not row[tool_col] is np.nan for tool_col in tool_cols):
+            for tool_col in tool_cols:
+                row_novel_accs = set()
+                if row[tool_col] is not np.nan:
+                    for tid in (p.strip() for p in row[tool_col].split(",")):
+                        tsv_path = os.path.join(interproscan_dir, tid + ".fa.tsv")
+                        if os.path.isfile(tsv_path) and os.stat(tsv_path).st_size != 0:
+                            for acc, _ in extract_accessions_from_tsv(tsv_path):
+                                row_novel_accs.add(acc)
+                acc_tally_one_plus_tool_novel.extend(row_novel_accs)
+    return acc_tally_no_tool, acc_tally_one_plus_tool_shared, acc_tally_one_plus_tool_novel
+
+
+def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir, prefix="transcript"):
     novel_transcripts = set()
     missed_transcripts = set()
     shared_orth = {}
@@ -51,10 +67,8 @@ def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
             for t in row[tool_col].split(","):
                 tsv_path = os.path.join(interproscan_dir, t + ".fa.tsv")
                 if os.path.isfile(tsv_path) and os.stat(tsv_path).st_size != 0:
-                    for acc, desc in extract_accessions_from_tsv(tsv_path):
+                    for acc, _ in set(extract_accessions_from_tsv(tsv_path)):
                         acc_tally_novel.append(acc)
-                        if acc not in acc_product:
-                            acc_product[acc] = desc
         else:
             shared_orth[row[tool_col]] = row[wbps_col]
             for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
@@ -62,7 +76,7 @@ def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols):
                 # with contextlib.redirect_stdout(None):
                 acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
 
-    return acc_product, acc_tally_shared, acc_tally_missed, acc_tally_novel, missed_transcripts
+    return acc_tally_shared, acc_tally_missed, acc_tally_novel, missed_transcripts
 
 
 def count_prod_word_occurrence_for_signif_accs(acc_sig_diff_iter, acc_all_occ_iter, acc_product_dict):
