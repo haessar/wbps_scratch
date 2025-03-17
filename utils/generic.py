@@ -18,6 +18,10 @@ def flatten_list_to_list(li):
     return flat_list
 
 
+def flatten_nested_dict(di):
+    return {k: v for li in di.values() for k, v in li.items()}
+
+
 def makedirs(path_iter):
     if isinstance(path_iter, str):
         path_iter = [path_iter]
