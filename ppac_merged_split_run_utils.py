@@ -1,17 +1,7 @@
 import os.path
 import pickle
 
-from orthologue_analysis.species import AltSourceMixin, Species
 from reannotation.pipelines import suspicious_orthologue_pipeline
-
-class Pristionchus(Species):
-    abbr = "P"
-    genus = "pristionchus"
-    clade = 0
-
-
-class PristionchusFromTool(AltSourceMixin, Pristionchus):
-    pass
 
 
 def pickle_cache_suspicious_orthologue_pipeline(tool, *args, **kwargs):

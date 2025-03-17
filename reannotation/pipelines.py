@@ -141,14 +141,14 @@ def find_adjacent_merged_genes(seq_id_map, species1, transcript1, blast1, transc
     return []
 
 
-def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq_id_map, wbps_prefix="transcript", tool_prefix="transcript"):
+def suspicious_orthologue_pipeline(og_df, wbps_col, tool_col, species_list, seq_id_map, wbps_prefix="transcript", tool_prefix="transcript"):
     split = {}
     merged = {}
     tool_species = species_list.get_species_with_data_label(tool_col)
     wbps_species = species_list.get_species_with_data_label(wbps_col)
     wbps_blast = wbps_species.blast_slice.compute()
     tool_blast = tool_species.blast_slice.compute()
-    for _, row in tqdm(hog_df.iterrows(), total=len(hog_df)):
+    for _, row in tqdm(og_df.iterrows(), total=len(og_df)):
         if not row[tool_col] is np.nan and not row[wbps_col] is np.nan:
             # Selecting just the first orthologue for simplicity
             wbps_id = list(map(str.strip, row[wbps_col].split(",")))[0].split(wbps_prefix + "_")[1]

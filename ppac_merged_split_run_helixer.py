@@ -3,14 +3,14 @@ import os.path
 
 from orthologue_analysis.utils import SequenceIDMapping, orthofinder_paths
 from orthologue_analysis.orthogroups import init_orthogroup_df
-from orthologue_analysis.species import SpeciesList
+from orthologue_analysis.species import SpeciesList, PristionchusFromTool
 
-from ppac_merged_split_run_utils import PristionchusFromTool, pickle_cache_suspicious_orthologue_pipeline
+from ppac_merged_split_run_utils import pickle_cache_suspicious_orthologue_pipeline
 
 wbps_col = "Ppac_LT"
 helixer_col = "Ppac_helixer_LT"
 results_label = "Results_Aug21"
-of = orthofinder_paths(results_label)
+of = orthofinder_paths(results_label, subdir="Orthogroups")
 seq_id_map = SequenceIDMapping(of["wd"])
 hog_df = init_orthogroup_df(of["orthogroups"])
 mars_data_dir = os.path.join("data", "from_MARS", "")

@@ -211,5 +211,16 @@ class Haemonchus(Species):
     genus = "haemonchus"
     clade = 0
 
+
 class HaemonchusFromTool(AltSourceMixin, Haemonchus):
+    pass
+
+
+class Pristionchus(Species):
+    abbr = "P"
+    genus = "pristionchus"
+    clade = 0
+
+
+class PristionchusFromTool(AltSourceMixin, Pristionchus):
     pass
