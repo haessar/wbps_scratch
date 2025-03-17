@@ -22,11 +22,11 @@ def fisher_exact_for_two_lists_of_accessions(l1, l2):
         res = fisher_exact([[freq1, freq2], [other1, other2]])
         if res.pvalue < 0.05:
             if res.statistic > 1:
-                more_frequent[acc] = res.statistic
+                more_frequent[acc] = [res.statistic, res.pvalue]
             elif res.statistic < 1:
-                less_frequent[acc] = res.statistic
+                less_frequent[acc] = [res.statistic, res.pvalue]
         else:
-            no_significant_difference[acc] = res.statistic
+            no_significant_difference[acc] = [res.statistic, res.pvalue]
     return {
         "more_frequent": more_frequent, 
         "as_expected": no_significant_difference,
