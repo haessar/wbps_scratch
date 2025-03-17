@@ -13,7 +13,7 @@ braker_col = "Ppac_braker3_LT"
 results_label = "Results_Aug21"
 of = orthofinder_paths(results_label, subdir="Orthogroups")
 seq_id_map = SequenceIDMapping(of["wd"])
-hog_df = init_orthogroup_df(of["orthogroups"])
+og_df = init_orthogroup_df(of["orthogroups"])
 mars_data_dir = os.path.join("data", "from_MARS", "")
 ebi_data_dir = os.path.join("data", "from_EBI", "")
 
@@ -27,7 +27,7 @@ species_list = SpeciesList([
     load_blast=True
 )
 
-braker_merged, braker_split = pickle_cache_suspicious_orthologue_pipeline("braker", hog_df, wbps_col, braker_col, species_list, seq_id_map, wbps_prefix="Transcript")
+braker_merged, braker_split = pickle_cache_suspicious_orthologue_pipeline("braker", og_df, wbps_col, braker_col, species_list, seq_id_map, wbps_prefix="Transcript")
 
 num_genes = len(list(species_list.get_species_with_data_label("Ppac_braker3_LT").db.all_features(featuretype="gene")))
 print(f"BRAKER3: merged={len(braker_merged)}, split={len(braker_split)}, total={round(100*(len(braker_split) + len(braker_merged)*2)/num_genes, 2)}")
