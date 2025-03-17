@@ -6,7 +6,7 @@ from orthologue_analysis.species import MansoniCladeFromTool
 from reannotation.utils import populate_accession_product_dict
 
 if __name__ == "__main__":
-    filepath = "acc_product.json"
+    filepath = os.path.join("data", "acc_product.json")
     mars_data_dir = os.path.join("data", "from_MARS", "")
 
     species = MansoniCladeFromTool("mansoni", data_dir=mars_data_dir, data_label="Sman_LT", prot_filename_suffix=".fa")
