@@ -95,6 +95,7 @@ class Species(ABC):
             filename_suffix=prot_filename_suffix,
             label=self.data_label + ".".join(prot_filename_suffix.split(".")[:-1])
         )
+        self.all_transcript_ids = [line.strip(">").strip("transcript:").split(" ")[0] for line in open(self.prot_meta.file_path) if line.startswith(">")]
         self.skip_plot = skip_plot
 
     @property
