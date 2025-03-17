@@ -15,22 +15,20 @@ MAX_GENE_DISTANCE = 2000
 MIN_PIDENT = 95
 
 
-def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols, interproscan_dir):
+def interpro_accession_pipeline_all_tools(wbps_species, og_df, wbps_col, tool_cols, interproscan_dir):
     acc_tally_no_tool = []
     acc_tally_one_plus_tool_shared = []
     acc_tally_one_plus_tool_novel = []
-    for _, row in hog_df.iterrows():
+    for _, row in og_df.iterrows():
         # WBPS transcripts without an orthologue with any tool
         if not row[wbps_col] is np.nan and all(row[tool_col] is np.nan for tool_col in tool_cols):
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
-                tran = wbps_db["transcript:" + tid]
-                # with contextlib.redirect_stdout(None):
+                tran = wbps_species.db["transcript:" + tid]
                 acc_tally_no_tool.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         # WBPS transcripts sharing at least one orthologue with an automated tool
         elif not row[wbps_col] is np.nan and any(not row[tool_col] is np.nan for tool_col in tool_cols):
             for tid in (p.split("transcript_")[1].strip() for p in row[wbps_col].split(",")):
-                tran = wbps_db["transcript:" + tid]
-                # with contextlib.redirect_stdout(None):
+                tran = wbps_species.db["transcript:" + tid]
                 acc_tally_one_plus_tool_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
         # Novel transcripts from any automated tool
         elif row[wbps_col] is np.nan and any(not row[tool_col] is np.nan for tool_col in tool_cols):
@@ -46,22 +44,23 @@ def interpro_accession_pipeline_all_tools(wbps_db, hog_df, wbps_col, tool_cols, 
     return acc_tally_no_tool, acc_tally_one_plus_tool_shared, acc_tally_one_plus_tool_novel
 
 
-def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interproscan_dir, prefix="transcript"):
+def interpro_accession_pipeline(wbps_db, og_df, wbps_col, tool_col, interproscan_dir, prefix="transcript"):
     novel_transcripts = set()
     missed_transcripts = set()
     shared_orth = {}
     acc_tally_novel = []
     acc_tally_missed = []
     acc_tally_shared = []
-    for _, row in hog_df.iterrows():
+    for _, row in og_df.iterrows():
         if all(row[[tool_col, wbps_col]].isna()):
             continue
+        # WBPS transcripts without a shared orthologue with tool
         if row[tool_col] is np.nan and not row[wbps_col] is np.nan:
             for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
                 missed_transcripts.add(tid)
                 tran = wbps_db[prefix + ":" + tid]
-                # with contextlib.redirect_stdout(None):
                 acc_tally_missed.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
+        # Novel transcripts from tool
         elif row[wbps_col] is np.nan and not row[tool_col] is np.nan:
             novel_transcripts.update(p.strip() for p in row[tool_col].split(","))
             for t in row[tool_col].split(","):
@@ -69,11 +68,11 @@ def interpro_accession_pipeline(wbps_db, hog_df, wbps_col, tool_col, interprosca
                 if os.path.isfile(tsv_path) and os.stat(tsv_path).st_size != 0:
                     for acc, _ in set(extract_accessions_from_tsv(tsv_path)):
                         acc_tally_novel.append(acc)
+        # WBPS transcripts sharing at least one orthologue with automated
         else:
             shared_orth[row[tool_col]] = row[wbps_col]
             for tid in (p.split(prefix + "_")[1].strip() for p in row[wbps_col].split(",")):
                 tran = wbps_db[prefix + ":" + tid]
-                # with contextlib.redirect_stdout(None):
                 acc_tally_shared.extend(acc for acc, _ in extract_accessions_from_transcript(tran))
 
     return acc_tally_shared, acc_tally_missed, acc_tally_novel, missed_transcripts
@@ -203,11 +202,11 @@ def suspicious_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, seq
     return genuine_merged, genuine_split
 
 
-def novel_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, out_dir="data/novel_orthologue_sequences/"):
+def novel_orthologue_pipeline(og_df, wbps_col, tool_col, species_list, out_dir="data/novel_orthologue_sequences/"):
     makedirs(out_dir)
     count = 0
     tool_species = species_list.get_species_with_data_label(tool_col)
-    for _, row in tqdm(hog_df.iterrows(), total=len(hog_df)):
+    for _, row in tqdm(og_df.iterrows(), total=len(og_df)):
         if not row[tool_col] is np.nan and row[wbps_col] is np.nan:
             count += 1
             # Selecting just the first orthologue for simplicity

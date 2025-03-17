@@ -20,8 +20,8 @@ CHROM_LABEL = "X"
 MAX_NEEDLE_SEQ_LEN = 200
 
 
-def init_orthogroup_df(hog_path):
-    df = pd.read_csv(hog_path, delimiter="\t")
+def init_orthogroup_df(og_path):
+    df = pd.read_csv(og_path, delimiter="\t")
     return df.iloc[df.isnull().sum(1).sort_values(ascending=True).index]
 
 

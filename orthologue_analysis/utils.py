@@ -40,9 +40,13 @@ class SpeciesIDMapping:
         return self.map[item]
 
 
-def orthofinder_paths(label):
+def orthofinder_paths(label, subdir = "Phylogenetic_Hierarchical_Orthogroups"):
     orthofinder_dir = get_project_root() / "data" / "from_MARS" / "OrthoFinder"
-    return {
-        "orthogroups": orthofinder_dir / "Phylogenetic_Hierarchical_Orthogroups" / label / "N0.tsv",
-        "wd": orthofinder_dir / "WorkingDirectory" / label
-    }
+    paths = {}
+    paths["wd"] = orthofinder_dir / "WorkingDirectory" / label
+    if subdir == "Phylogenetic_Hierarchical_Orthogroups":
+        paths["orthogroups"] = orthofinder_dir / subdir / label / "N0.tsv"
+    elif subdir == "Orthogroups":
+        paths["orthogroups"] = orthofinder_dir / subdir / label / "Orthogroups.tsv"
+        paths["orthogroups_unassigned_genes"] = orthofinder_dir / subdir / label / "Orthogroups_UnassignedGenes.tsv"
+    return paths
