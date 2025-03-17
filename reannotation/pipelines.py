@@ -218,4 +218,4 @@ def novel_orthologue_pipeline(hog_df, wbps_col, tool_col, species_list, out_dir=
                 tool_transcript = tool_species.db["transcript:" + tool_id.split("transcript_")[-1]]
             with open(os.path.join(out_dir, tool_id + ".fa"), 'a') as f:
                 f.write(">" + tool_transcript.id + "\n")
-                f.write(tool_species.get_protein_sequence(tool_transcript.id))
+                f.write(tool_species.get_protein_sequence(tool_transcript.id).strip("*"))
