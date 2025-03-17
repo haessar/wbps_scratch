@@ -28,7 +28,10 @@ def extract_accessions_from_transcript(tran, lookup=False, acc_product=None):
             try:
                 yield acc, desc, resp["metadata"]["type"]
             except KeyError:
-                pass
+                try:
+                    yield acc, desc, resp["type"]
+                except KeyError:
+                    pass
         else:
             yield acc, desc
 
@@ -54,11 +57,19 @@ def populate_accession_product_dict(wbps_species, acc_product=None):
     if acc_product is None:
         acc_product = {}
     for tran in tqdm(wbps_db.all_features(featuretype="mRNA"), total=len(list(wbps_db.all_features(featuretype="mRNA")))):
-        # with contextlib.redirect_stdout(None):
         for acc, prod, typ in extract_accessions_from_transcript(tran, lookup=True, acc_product=acc_product):
             acc_product[typ][acc] = prod
     for tsv_file in tqdm(os.listdir(interproscan_dir), total=len(os.listdir(interproscan_dir))):
         tsv_path = os.path.join(interproscan_dir, tsv_file)
+        if os.stat(tsv_path).st_size != 0:
+            try:
+                for acc, prod, typ in extract_accessions_from_tsv(tsv_path, lookup=True, acc_product=acc_product):
+                    acc_product[typ][acc] = prod
+            except IsADirectoryError:
+                pass
+    unassigned_genes_dir = os.path.join(interproscan_dir, "unassigned_genes")
+    for tsv_file in tqdm(os.listdir(unassigned_genes_dir), total=len(os.listdir(unassigned_genes_dir))):
+        tsv_path = os.path.join(unassigned_genes_dir, tsv_file)
         if os.stat(tsv_path).st_size != 0:
             for acc, prod, typ in extract_accessions_from_tsv(tsv_path, lookup=True, acc_product=acc_product):
                 acc_product[typ][acc] = prod

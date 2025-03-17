@@ -204,3 +204,12 @@ class IndicumClade(Schistosoma):
 
 class NewSpeciesClade(Schistosoma):
     clade = 5
+
+
+class Haemonchus(Species):
+    abbr = "H"
+    genus = "haemonchus"
+    clade = 0
+
+class HaemonchusFromTool(AltSourceMixin, Haemonchus):
+    pass

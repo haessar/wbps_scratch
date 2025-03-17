@@ -67,3 +67,6 @@ Iterates through all genes for a given **input_gff** and selects the transcript 
 
 ### `reannotation_X_all.ipynb`
 Perform analysis on reannotation of species X, comparing output of automated tools with canonical WBPS annotation. Parses OrthoFinder results and derives statistics such as InterPro accession frequencies.
+
+### `./populate_interpro_accession_dict*.py`
+Pre-populate a JSON containing IPR numbers and their descriptions, grouped by category, for a species. Parses attributes from annotation GFF3, as well as the TSV output from Interproscan runs on novel transcripts (from MARS).
