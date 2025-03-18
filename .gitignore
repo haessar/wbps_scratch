@@ -1,7 +1,7 @@
 *.db
 data/configs/*/*.ini
 data/tmp/*/*.bed
-data/tmp/*.pickle
+data/tmp/*.pickle*
 plots/*/N0.*
 
 __pycache__
