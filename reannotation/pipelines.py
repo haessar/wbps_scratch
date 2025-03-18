@@ -1,7 +1,7 @@
 from collections import Counter
-# import contextlib
 import os
 import os.path
+import pickle
 import re
 
 from gffutils.exceptions import FeatureNotFoundError
@@ -200,6 +200,23 @@ def suspicious_orthologue_pipeline(og_df, wbps_col, tool_col, species_list, seq_
         else:
             genuine_split[k] = v
     return genuine_merged, genuine_split
+
+
+def pickle_cache_suspicious_orthologue_pipeline(tool, sp_prefix, *args, **kwargs):
+    merged_path = os.path.join("data", "tmp", f"{sp_prefix}_{tool}_merged.pickle")
+    split_path = os.path.join("data", "tmp", f"{sp_prefix}_{tool}_split.pickle")
+    if os.path.isfile(merged_path) and os.path.isfile(split_path):
+        with open(merged_path, "rb") as f:
+            merged = pickle.load(f)
+        with open(split_path, "rb") as f:
+            split = pickle.load(f)
+    else:
+        merged, split = suspicious_orthologue_pipeline(*args, **kwargs)
+        with open(merged_path, 'wb') as f:
+            pickle.dump(merged, f, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(split_path, 'wb') as f:
+            pickle.dump(split, f, protocol=pickle.HIGHEST_PROTOCOL)
+    return merged, split
 
 
 def novel_orthologue_pipeline(og_df, wbps_col, tool_col, species_list, out_dir="data/novel_orthologue_sequences/"):

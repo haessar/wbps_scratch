@@ -5,7 +5,7 @@ from orthologue_analysis.utils import SequenceIDMapping, orthofinder_paths
 from orthologue_analysis.orthogroups import init_orthogroup_df
 from orthologue_analysis.species import SpeciesList, PristionchusFromTool
 
-from ppac_merged_split_run_utils import pickle_cache_suspicious_orthologue_pipeline
+from reannotation.pipelines import pickle_cache_suspicious_orthologue_pipeline
 
 
 wbps_col = "Ppac_LT"
@@ -27,7 +27,7 @@ species_list = SpeciesList([
     load_blast=True
 )
 
-braker_merged, braker_split = pickle_cache_suspicious_orthologue_pipeline("braker", og_df, wbps_col, braker_col, species_list, seq_id_map, wbps_prefix="Transcript")
+braker_merged, braker_split = pickle_cache_suspicious_orthologue_pipeline("braker", "ppac", og_df, wbps_col, braker_col, species_list, seq_id_map, wbps_prefix="Transcript")
 
 num_genes = len(list(species_list.get_species_with_data_label("Ppac_braker3_LT").db.all_features(featuretype="gene")))
 print(f"BRAKER3: merged={len(braker_merged)}, split={len(braker_split)}, total={round(100*(len(braker_split) + len(braker_merged)*2)/num_genes, 2)}")
