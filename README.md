@@ -70,3 +70,6 @@ Perform analysis on reannotation of species X, comparing output of automated too
 
 ### `./populate_interpro_accession_dict*.py`
 Pre-populate a JSON containing IPR numbers and their descriptions, grouped by category, for a species. Parses attributes from annotation GFF3, as well as the TSV output from Interproscan runs on novel transcripts (from MARS).
+
+### `total_matched_missed_novel.ipynb`
+Summary statistics and plotting for reannotation analysis of key species, primarily for producing Figures and Tables.
