@@ -1,7 +1,7 @@
 #!/bin/bash
-
+defaultTasks=17  # Avoid using all 20 available nodes on MARS
 x=`find . -type f | wc -l`
-y=20
+y="${1:-$defaultTasks}"
 batch_size=$(expr $x / $y + 1)
 echo $batch_size
 for i in `seq 1 $y`
