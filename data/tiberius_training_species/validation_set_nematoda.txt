@@ -1,0 +1,5 @@
+ancylostoma_caninum_prjna72585
+angiostrongylus_vasorum_prjna663250
+dictyocaulus_viviparus_prjna72587
+necator_americanus_prjna72135
+nippostrongylus_brasiliensis_prjeb511
