@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+import argparse
 from bs4 import BeautifulSoup
 import os
 import os.path
@@ -26,7 +27,17 @@ def soup_resp(url):
 
 
 if __name__ == "__main__":
-    output_dir = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('output_dir')
+    parser.add_argument('--species-list', '-s', type=str, default=None)
+    parser.add_argument('--softmasked', "-m", action="store_true")
+    args = parser.parse_args()
+
+    species_list = []
+    if args.species_list:
+        with open(args.species_list, "r") as f:
+            species_list = f.read().splitlines()
+    FA_SUFFIX = "genomic_softmasked.fa.gz" if args.softmasked else "genomic.fa.gz"
     for r1 in soup_resp(base_url).find("table").find_all("tr"):
         a1 = r1.find('a')
         if a1 and "_" in a1.text:
@@ -35,10 +46,12 @@ if __name__ == "__main__":
                 a2 = r2.find('a')
                 if a2 and r2.find('img').attrs.get('src') == "/icons/folder.gif":
                     acc = a2.text
+                    if species_list and not any([s for s in species_list if s.startswith(species.strip("/")) and s.endswith(acc.strip("/").lower())]):
+                        continue
                     for r3 in soup_resp(base_url + species + acc).find('table').find_all("tr"):
                         a3 = r3.find('a')
                         if a3:
-                            if a3.text.endswith("genomic.fa.gz") or a3.text.endswith("annotations.gff3.gz"):
-                                if a3.text not in os.listdir(output_dir):
+                            if a3.text.endswith(FA_SUFFIX) or a3.text.endswith("annotations.gff3.gz"):
+                                if a3.text not in os.listdir(args.output_dir):
                                     print(a3.text)
-                                    download_file(base_url + species + acc + a3.text, datadir=output_dir)
+                                    download_file(base_url + species + acc + a3.text, datadir=args.output_dir)
