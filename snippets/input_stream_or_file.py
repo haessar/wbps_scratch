@@ -8,9 +8,9 @@ if not sys.stdin.isatty():
 else:
     try:
         input_filename = sys.argv[1]
-    except IndexError:
+    except IndexError as e:
         message = 'need filename as first argument if stdin is not full'
-        raise IndexError(message)
+        raise IndexError(message) from e
     else:
         input_stream = open(input_filename, 'rU')
 

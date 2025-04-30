@@ -18,14 +18,14 @@ QNAM_IDX = 3
 QLEN_IDX = 5
 
 
-def find_biologically_interesting_genes(pfamout_path, unique_prots):
+def find_biologically_interesting_genes(pfamout_path, unique_prot_set):
     encountered_te_pfams = []
     biologically_interesting_genes = set()
     with open(pfamout_path, newline="\n") as tsv_file:
-        for line in tsv_file:
-            for line in tsv_file:
-                if not line.startswith("#"):
-                    row = line.split()
+        for l in tsv_file:
+            for l in tsv_file:
+                if not l.startswith("#"):
+                    row = l.split()
                     # Is it greater than 150 amino acids?
                     if int(row[QLEN_IDX]) >= 150:
                         pfam = row[TACC_IDX].split('.')[0]
@@ -34,7 +34,7 @@ def find_biologically_interesting_genes(pfamout_path, unique_prots):
                         if pfam in TE_PFAMS:
                             encountered_te_pfams.append(pfam)
                         else:
-                            if prot in unique_prots:
+                            if prot in unique_prot_set:
                                 biologically_interesting_genes.add(prot.split(".")[0])
     print("Encountered transposable elements:")
     for k, v in Counter(encountered_te_pfams).most_common():
@@ -50,11 +50,11 @@ if __name__ == "__main__":
     parser.add_argument("--combined", "-c", action="store_true")
     parser.add_argument("--odb", choices=['exists', 'missing'])
     args = parser.parse_args()
-    
-    orthogroups_path = "data/from_MARS/OrthoFinder/Results_Jun03_1/Phylogenetic_Hierarchical_Orthogroups/N0.tsv"
+
+    ORTHOGROUPS_PATH = "data/from_MARS/OrthoFinder/Results_Jun03_1/Phylogenetic_Hierarchical_Orthogroups/N0.tsv"
     cols = ["hog", "og", "clade", "wbps", "odb", "braker", "helixer"]
 
-    df = pd.read_csv(orthogroups_path, delimiter="\t")
+    df = pd.read_csv(ORTHOGROUPS_PATH, delimiter="\t")
     df.columns = cols
     if args.odb == "exists":
         df = df[~df["odb"].isna()]
@@ -70,6 +70,7 @@ if __name__ == "__main__":
     novel.update(flatten_list_to_set(novel_df["braker"].str.split(",").tolist()))
     novel.update(flatten_list_to_set(novel_df["helixer"].str.split(",").tolist()))
 
+    unique_prots = set()
     if args.combined:
         unique_prots = novel
     elif "helixer" in args.pfamout_path:

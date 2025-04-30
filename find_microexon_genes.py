@@ -32,36 +32,36 @@ if __name__ == "__main__":
         db = gffutils.create_db(INPUTS[0], INPUTS[1], merge_strategy="create_unique")
     else:
         db = gffutils.FeatureDB(INPUTS[1])
-    
+
     if output_dir:
         output_path = os.path.join(output_dir, os.path.splitext(INPUTS[1])[0] + ".md")
         f = open(output_path, "w")
 
-    ME_gene_count = 0
+    ME_GENE_COUNT = 0
     for gene in db.all_features(featuretype="gene"):
-        is_ME_gene = False
+        IS_ME_GENE = False
         exons = list(db.children(gene.id, featuretype="exon"))
         if len(exons) > 1:
-            previous_complied = False
-            consecutive = 1
+            PREVIOUS_COMPLIED = False
+            CONSECUTIVE = 1
             for exon in exons:
                 if is_microexon(len(exon)):
-                    if previous_complied:
-                        consecutive += 1
-                        if consecutive == REQ_CONSECUTIVE:
-                            is_ME_gene = True
+                    if PREVIOUS_COMPLIED:
+                        CONSECUTIVE += 1
+                        if CONSECUTIVE == REQ_CONSECUTIVE:
+                            IS_ME_GENE = True
                             break
-                    previous_complied = True
+                    PREVIOUS_COMPLIED = True
                     continue
-                previous_complied = False
-        if is_ME_gene:
+                PREVIOUS_COMPLIED = False
+        if IS_ME_GENE:
             print(gene)
             if output_dir:
                 f.write(gene.id + ":&emsp;")
                 f.write("-".join([format_microexon_length(len(e)) for e in exons]))
                 f.write("\\\n")
-            ME_gene_count += 1
-    print(ME_gene_count)
+            ME_GENE_COUNT += 1
+    print(ME_GENE_COUNT)
 
     if output_dir:
         f.close()

@@ -5,10 +5,10 @@ import os.path
 
 import matplotlib.pyplot as plt
 
-te_dir = "data/transposable_elements/"
+TE_DIR = "data/transposable_elements/"
 
-braker_tes = os.path.join(te_dir, "counts_braker.txt")
-helixer_tes = os.path.join(te_dir, "counts_helixer.txt")
+braker_tes = os.path.join(TE_DIR, "counts_braker.txt")
+helixer_tes = os.path.join(TE_DIR, "counts_helixer.txt")
 
 def read_counts(path):
     counts = {}
@@ -32,14 +32,14 @@ def most_different_counts(c1, c2, num=5):
         if idx == num-1:
             break
 
-num = 10
+NUM = 10
 print(f"HELIXER - Total TEs: {sum(helixer_counts.values())}")
-print(f"Top {num} most differentiated from BRAKER:")
-mdch = list(most_different_counts(helixer_counts, braker_counts, num))
+print(f"Top {NUM} most differentiated from BRAKER:")
+mdch = list(most_different_counts(helixer_counts, braker_counts, NUM))
 print()
 print(f"BRAKER - Total TEs: {sum(braker_counts.values())}")
-print(f"Top {num} most differentiated from HELIXER:")
-mdcb = list(most_different_counts(braker_counts, helixer_counts, num))
+print(f"Top {NUM} most differentiated from HELIXER:")
+mdcb = list(most_different_counts(braker_counts, helixer_counts, NUM))
 print()
 
 # plt.barh(y=[k for k, v in mdch], width=[v for k, v in mdch])

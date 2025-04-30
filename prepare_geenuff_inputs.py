@@ -20,7 +20,7 @@ if __name__ == "__main__":
             if match.group("species"):
                 filetree[match["species"]].add(match["acc"])
         except AttributeError:
-            print("{} does not match input file pattern".format(file), file=sys.stderr)
+            print(f"{file} does not match input file pattern", file=sys.stderr)
 
     for species, accs in filetree.items():
         for acc in accs:
@@ -29,11 +29,11 @@ if __name__ == "__main__":
             else:
                 output_path = os.path.join(output_dir, species, "input")
             os.makedirs(output_path, exist_ok=True)
-            for f in glob(os.path.join(input_dir, "{}*{}*".format(species, acc))):
+            for f in glob(os.path.join(input_dir, f"{species}*{acc}*")):
                 shutil.move(f, output_path)
             if len(os.listdir(output_path)) != 2:
-                print("There are {}!=2 files in {}.".format(len(os.listdir(output_path)), output_path), file=sys.stderr)
+                print(f"There are {len(os.listdir(output_path))}!=2 files in {output_path}.", file=sys.stderr)
             if not glob(os.path.join(output_path, "*genomic.fa*")):
-                print("Missing genomic.fa file in {}".format(output_path), file=sys.stderr)
+                print(f"Missing genomic.fa file in {output_path}", file=sys.stderr)
             if not glob(os.path.join(output_path, "*annotations.gff3*")):
-                print("Missing annotations.gff3 file in {}".format(output_path), file=sys.stderr)
+                print(f"Missing annotations.gff3 file in {output_path}", file=sys.stderr)

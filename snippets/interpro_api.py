@@ -14,7 +14,7 @@ def get_pfams_for_feature_accession(f: gffutils.Feature, ipa_map: defaultdict[li
         if "info" in f.attributes:
             for ipa in re.findall(r"InterPro accession:(IPR[0-9]*)\s", dict(f.attributes)["info"][0]):
                 if ipa not in ipa_map:
-                    resp = requests.get(INTERPRO_API.format(ipa))
+                    resp = requests.get(INTERPRO_API.format(ipa), timeout=300)
                     try:
                         pfams = list(json.loads(resp.content)['metadata']['member_databases'].get('pfam', {}).keys())
                         ipa_map[ipa].extend(pfams)

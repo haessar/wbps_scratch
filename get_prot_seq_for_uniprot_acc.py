@@ -4,11 +4,11 @@ import json
 import sys
 import urllib.request
 
-url = "https://alphafold.ebi.ac.uk/api/prediction/{}"
+URL = "https://alphafold.ebi.ac.uk/api/prediction/{}"
 
 if __name__ == "__main__":
     acc = sys.argv[1]
-    response = urllib.request.urlopen(url.format(acc))
+    response = urllib.request.urlopen(URL.format(acc))
     if response.status == 200:
         reader = codecs.getreader("utf-8")
         obj = json.load(reader(response))

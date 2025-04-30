@@ -13,16 +13,16 @@ def extract_accession(s):
     return "".join(s.split("_")[2:]).lower()
 
 
-def make_symlinks_for_species_file(species_file, type="training", start=1):
+def make_symlinks_for_species_file(species_file, h5s_dir, train_dir, typ="training", start=1):
     with open(species_file, "r") as f:
         species_list = f.read().splitlines()
-    
+
     for idx, species in enumerate(species_list, start=start):
         try:
             sp = extract_species(species)
-            src_paths = glob(os.path.join(h5s_dir, "{}*".format(sp), "*.h5"))
+            src_paths = glob(os.path.join(h5s_dir, f"{sp}*", "*.h5"))
             if len(src_paths) == 0:
-                raise Exception("Couldn't determine src path for {}".format(species))
+                raise RuntimeError(f"Couldn't determine src path for {species}")
             elif len(src_paths) > 1:
                 src_matching_accession_paths = []
                 for fp in src_paths:
@@ -37,12 +37,14 @@ def make_symlinks_for_species_file(species_file, type="training", start=1):
                     src_path,
                     train_dir
                 ),
-                os.path.join(train_dir, "{}_data.species_{:02d}.h5".format(type, idx))
+                # pylint: disable=C0209
+                os.path.join(train_dir, "{}_data.species_{:02d}.h5".format(typ, idx))
             )
         except FileExistsError:
             pass
         except Exception as e:
-            print("{}: {}".format(species, e), file=sys.stderr)
+            print(f"{species}: {e}", file=sys.stderr)
+    # pylint: disable=W0631
     return idx
 
 
@@ -55,5 +57,5 @@ if __name__ == "__main__":
 
     os.makedirs(train_dir, exist_ok=True)
 
-    last_num = make_symlinks_for_species_file(train_set_file)
-    make_symlinks_for_species_file(valid_set_file, type="validation", start=last_num + 1)
+    last_num = make_symlinks_for_species_file(train_set_file, h5s_dir, train_dir)
+    make_symlinks_for_species_file(valid_set_file, h5s_dir, train_dir, typ="validation", start=last_num + 1)
